@@ -1,0 +1,310 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    /* border: 1px solid rgb(0, 0, 0); */
+
+}
+
+body, html {
+    width: 100%;
+    height: 2000px;
+    /* background-color: rgb(49, 49, 49); */
+}
+
+body {
+    background-color: rgb(30, 30, 30);
+    font-family: 'Montserrat', sans-serif;
+}
+
+header {
+    width: 100%;
+    padding: 10px 0.5% 0px 0.5%;
+    background: transparent;
+    float: left;
+    position: fixed;
+}
+
+header #logo {
+    color: #ffffff;
+    cursor: pointer;
+}
+
+header #logo span {
+    font-size: 1.7em;
+    line-height: 40px;
+    margin-left: 40px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+@media (min-width: 701px) {
+    #logo {
+        float: left;
+        width: 30%;
+        font-size: 1.5em;
+    }
+
+    #about {
+        float: right;
+        width: 60%;
+    }
+}
+
+@media (max-width: 700px) {
+    #logo {
+        margin-top: 15px;
+        width: 100%;
+        font-size: 1.5em;
+    }
+
+    #about {
+        float: left;
+        width: 100%;
+    }
+}
+
+@media (min-width: 1001px) {
+    #top {
+        font-size: 3em;
+        height: 1500px;
+    }
+}
+
+@media (max-width: 1000px) and (min-width: 651px) {
+    #top {
+        font-size: 2em;
+        height: 600px;
+    }
+}
+
+@media (max-width: 650px) {
+    #top {
+        font-size: 1.5em;
+        padding-top: 50%;
+        height: 500px;
+    }
+}
+
+#about {
+    text-align: center;
+    font-size: 1em;
+    line-height: 40px;
+    margin-bottom: 10px;
+}
+
+#about > a {color: white}
+#about > a:hover {
+    color: rgb(174, 174, 174);
+    text-decoration: underline;
+}
+
+#about > a:not(:last-child) {
+    margin-right: 7%;
+}
+
+.fixed {
+    z-index: 5000;
+    background-color: rgb(30, 30, 30);
+    border-bottom: 1px solid rgb(181, 181, 181);
+}
+
+header .fixed #logo {
+    color: white; 
+}
+
+.fixed #about a {color: white}
+.fixed #about a:hover {color: rgb(174, 174, 174)}
+
+#top {
+    width: 100%;
+    background-image: url('https://phonoteka.org/uploads/posts/2023-02/1675366330_phonoteka-org-p-oboi-kapibara-na-rabochii-stol-vkontakte-49.jpg');
+    background-blend-mode: multiply;
+    background-color: rgb(65, 65, 65);
+    background-size: cover;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    /* font-size: 3em; */
+}
+
+#top h1 {
+    padding-top: 20%;
+}
+
+#top h3 {
+    color: rgb(94, 94, 94);
+}
+
+#main {
+    padding: 100px 20%;
+    width: 60%;
+    float: left;
+    background-color: rgb(30, 30, 30);
+    border-top: 2px solid rgb(181, 181, 181);
+    border-bottom: 2px solid rgb(181, 181, 181);
+    color: rgb(255, 255, 255);
+    font-size: 1.5em;
+}
+
+#main div {
+    width: 48%;
+    margin-right: 2%;
+    float: left; 
+}
+
+@media (min-width: 1401px) {
+    #main {
+        padding: 100px 20%;
+        width: 60%;
+    }
+}
+
+@media (max-width: 1400px) {
+    #main {
+        padding: 100px 10%;
+        width: 80%;
+    }
+}
+
+@media (max-width: 700px) {
+    #main div {
+        width: 98%!important;
+    }
+}
+
+#main h2 {font-size: 2em}
+#main span {color:rgb(94, 94, 94)}
+
+#overview {
+    float: left;
+    background-image: url('https://avatars.mds.yandex.net/i?id=79cd797f2be69d727ccc4be3d6bbbe61-5242289-images-thumbs&n=13');
+    background-blend-mode: multiply;
+    background-color: rgb(53, 53, 53);
+    background-size: cover;
+    background-attachment: fixed;
+
+    padding: 100px 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+#overview h2 {
+    font-size: 4em;
+}
+
+#overview h4 {
+    color:rgb(94, 94, 94);
+    font-size: 1.5em;
+}
+
+#overview .img {
+    float: left;
+    width: 30%;
+    margin-right: 10%;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    
+}
+
+#overview .img:nth-child(odd) {
+    margin-left: 18%;
+}
+
+#overview img {
+    background: #fafafa;
+    /* padding: 1px; */
+    /* border: 1px solid rgb(87, 87, 87); */
+    float: left;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 7px;
+}
+
+#overview span {
+    float: left;
+    width: 100%;
+    max-width: 500px;
+    font-size: 2em;
+    margin-top: 10px;
+    color: white;
+}
+
+@media (max-width: 700px) {
+    #overview .img {
+        margin-right: 0!important;
+        width: 80%!important;
+        margin-left: 10%!important;
+    }
+}
+
+#contacts {
+    float: left;
+    width: 100%;
+    padding-bottom: 40px;
+    padding-top: 70px;
+    border-top: 1px solid rgb(181, 181, 181);
+    background: rgb(30, 30, 30);
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: normal;
+}
+
+#contacts h5 {
+    font-size: 3em;
+    color: white;
+}
+
+#form_input {
+    margin-top: 15px;
+    width: 35%;
+    margin-left: 38%;
+    font-size: 1.1em;
+}
+
+#form_input label {
+    color: white;
+    margin-bottom: 100px;
+    cursor: pointer;
+    font-size: 1.4em;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#form_input label > span {
+    color: red;
+}
+
+#form_input input, #form_input textarea {
+    margin-bottom: 10px;
+    width: 70%;
+    padding: 10px 2%;
+    border-radius: 7px;
+    border: 2px solid rgb(30, 30, 30);
+    font-size: 0.9em;
+    color: rgb(0, 0, 0);
+}
+
+#form_input input:focus, #form_input textarea:focus {
+    border-color: white;
+
+}
+
+.btn {
+    float: left;
+    border: 2px solid rgb(30, 30, 30);
+    padding: 5px 9px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    background-color: rgb(104, 104, 104);
+    text-shadow: #454545 0 0 2px;
+    cursor: pointer;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn:hover {
+    background-color: rgb(66, 66, 66);
+}
