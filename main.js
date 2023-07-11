@@ -42,4 +42,3 @@ function sendTelegramMessage(name, url, message) {
     $('#url').val('');
     $('#messege').val('');
   });
-  
