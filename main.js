@@ -7,7 +7,7 @@ function sendTelegramMessage(name, url, message) {
   
     // Формирование сообщения для отправки
     var telegramMessage = 'Новое сообщение!\n\nИмя: ' + name + '\nurl: ' + url + '\nСообщение: ' + message;
-  
+
     // Отправка сообщения через AJAX запрос
     $.ajax({
       url: 'https://api.telegram.org/bot6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo/sendMessage',

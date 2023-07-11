@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="main.css">
     <script src="main.js" defer></script>
+    <!-- <script src="bot.js" defer></script> -->
 </head>
 <body>
     <header>
@@ -13,10 +14,9 @@
             <span>сapybara.ru</span>
         </div>
         <div id="about">
-            <a href="#" title="Кто такие капибары" onclick="slowScroll('#main')">Кто такие капибары</a>
+            <a href="#" title="Кто" onclick="slowScroll('#main')">Кто такие капибары</a>
             <a href="#" title="Интересные факты" onclick="slowScroll('#overview')">Интересные факты</a>
             <a href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a>
-
         </div>
     </header>
 
@@ -41,13 +41,36 @@
         <h4></h4>
         
         <!-- <div class="img">
-            <img title="" src="" alt="">
-            <span></span>
+            <img title="${name}" src="${url}" alt="">
+            <span>${message}</span>
         </div> -->
 
+        <!-- <h1>WebSocket Example</h1> -->
+        <div id="messages"></div>
+        <script>
+            // Создаем WebSocket соединение
+            const ws = new WebSocket('ws://localhost:8080');
+    
+            // Обработка входящих сообщений от WebSocket
+            ws.onmessage = function(event) {
+            const messageData = JSON.parse(event.data);
+            const text = messageData.text;
+            const regex = /([^ \n]+) \n([^ \n]+) \n([^]+)/;
+            const [, name, url, messageText] = text.match(regex);
+    
+            // Добавляем полученное сообщение в элемент с id "messages"
+            const messagesDiv = document.getElementById('messages');
+            // messagesDiv.innerHTML += `<p>${JSON.stringify(messageData)}</p>`;
+            messagesDiv.innerHTML += `<div class="img">
+                <img title="${name}" src="${url}" alt="">
+                <span>${messageText}</span>
+            </div>`;
+            
+            };
+        </script>
+
         <div class="img">
-            <img title="админКапибара.ру" src="https://avatars.mds.yandex.net/i?id=bc28154ecc9860909d3106f4d9b0940fdd79fc89-9026739-images-thumbs&n=13" alt="">
-            <span>Они не внесены в красную книгу как исчезающий вид, но их популяция сокращается из-за охоты на них</span>
+            <img title="админКапибара.ру" src="https://avatars.mds.yandex.net/i?id=bc28154ecc9860909d3106f4d9b0940fdd79fc89-9026739-images-thumbs&n=13" alt=""><span>Они не внесены в красную книгу как исчезающий вид, но их популяция сокращается из-за охоты на них</span>
         </div>
 
         <div class="img">
@@ -100,7 +123,7 @@
             <input type="text" placeholder="Введите имя" name="name" id="name"><br>
             <label for="url">Url картинки <span>*</span></label><br>
             <input type="url" placeholder="Введите url" name="url" id="url"><br>
-            <label for="messege">Факт про капибару <span>*</span></label><br>
+            <label for="messege">Интересный факт <span>*</span></label><br>
             <textarea placeholder="Введите сообщение" name="messege" id="messege"></textarea><br>
             <div id="mess_send" class="btn">Отправить </div>
         </form>

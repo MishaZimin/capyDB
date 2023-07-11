@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     outline: none;
-    /* border: 1px solid rgb(0, 0, 0); */
+    /* border: 1px solid rgb(255, 255, 255); */
 
 }
 
@@ -192,6 +192,7 @@ header .fixed #logo {
 
 #overview h2 {
     font-size: 4em;
+    margin-bottom: 5%;
 }
 
 #overview h4 {
@@ -218,14 +219,14 @@ header .fixed #logo {
     /* border: 1px solid rgb(87, 87, 87); */
     float: left;
     width: 100%;
-    max-width: 500px;
+    max-width: 400px;
     border-radius: 7px;
 }
 
 #overview span {
     float: left;
     width: 100%;
-    max-width: 500px;
+    max-width: 400px;
     font-size: 2em;
     margin-top: 10px;
     color: white;
