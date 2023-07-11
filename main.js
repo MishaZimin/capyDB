@@ -6,7 +6,7 @@ function sendTelegramMessage(name, url, message) {
     var telegramChatId = '997616670';
   
     // Формирование сообщения для отправки
-    var telegramMessage = 'Новое сообщение!\n\nИмя: ' + name + '\nurl: ' + url + '\nСообщение: ' + message;
+    var telegramMessage = '\n' + name + '\n' + url + '\n' + message;
 
     // Отправка сообщения через AJAX запрос
     $.ajax({
