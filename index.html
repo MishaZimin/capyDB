@@ -5,69 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.js"></script>
+
     <script src="main.js" defer></script>
+
     <!-- <script src="bot.js" defer></script> -->
 </head>
 <body>
     <header>
         <div id="logo" onclick="slowScroll('#top')">
             <span>сapybara.ru</span>
+            <!-- <span>logo.</span> -->
         </div>
         <div id="about">
             <a href="#" title="Кто" onclick="slowScroll('#main')">Кто такие капибары</a>
             <a href="#" title="Интересные факты" onclick="slowScroll('#overview')">Интересные факты</a>
             <a href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a>
+
+            <!-- <a href="#" title="Кто" onclick="slowScroll('#main')">информация</a>
+            <a href="#" title="Интересные факты" onclick="slowScroll('#overview')">post</a>
+            <a href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a> -->
+
         </div>
     </header>
 
     <div id="top">
         <h1>Капибары</h1>
         <h3>сайт с капибарами</h3>
+        <!-- <h1>Сайт</h1>
+        <h3></h3> -->
     </div>
 
     <div id="main">
         <div class="intro">
             <h2>Капиба́ра</h2>
             <span>или водосви́нка (лат. Hydrochoerus hydrochaeris)</span>
+            <!-- <h2>Lorem, ipsum.</h2>
+            <span>Lorem ipsum dolor sit.</span> -->
         </div>
 
         <div class="text">
             <span> - полуводное травоядное млекопитающее из подсемейства водосвинковых (Hydrochoerinae), один из двух (наряду с малой водосвинкой) ныне существующих видов рода водосвинки. Капибара — самый крупный среди современных грызунов.</span>
+            <!-- <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam sapiente fugit similique quis excepturi perferendis consequatur aspernatur tempora iusto quae.</span> -->
         </div>
     </div>
 
     <div id="overview">
         <h2>Интересные факты</h2>
+        <!-- <h2>post</h2> -->
         <h4></h4>
-        
-        <!-- <div class="img">
-            <img title="${name}" src="${url}" alt="">
-            <span>${message}</span>
-        </div> -->
-
-        <!-- <h1>WebSocket Example</h1> -->
         <div id="messages"></div>
-        <script>
-            // Создаем WebSocket соединение
-            const ws = new WebSocket('ws://localhost:8080');
-    
-            // Обработка входящих сообщений от WebSocket
-            ws.onmessage = function(event) {
-            const messageData = JSON.parse(event.data);
-            const text = messageData.text;
-            const regex = /([^ \n]+) \n([^ \n]+) \n([^]+)/;
-            const [, name, url, messageText] = text.match(regex);
-    
-            // Добавляем полученное сообщение в элемент с id "messages"
-            const messagesDiv = document.getElementById('messages');
-            // messagesDiv.innerHTML += `<p>${JSON.stringify(messageData)}</p>`;
-            messagesDiv.innerHTML += `<div class="img">
-                <img title="${name}" src="${url}" alt="">
-                <span>${messageText}</span>
-            </div>`;
-            
-            };
-        </script>
 
         <div class="img">
             <img title="админКапибара.ру" src="https://avatars.mds.yandex.net/i?id=bc28154ecc9860909d3106f4d9b0940fdd79fc89-9026739-images-thumbs&n=13" alt=""><span>Они не внесены в красную книгу как исчезающий вид, но их популяция сокращается из-за охоты на них</span>
@@ -98,22 +87,6 @@
             <img src="http://img-fotki.yandex.ru/get/9154/11786484.dd/0_803a1_c532873e_XXL.jpg" alt="">
             <span>Капибары очень любят грязь и воду. Они могут проводить часы, купаясь в реках и озерах, а также погружаясь в грязь, чтобы охладиться и защитить свою кожу от насекомых.</span>
         </div>
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=2fa3fc7058ed0377a3bbd7905ffb882a4a3b5694-9152791-images-thumbs&n=13" alt="">
-            <span>Капибары могут издавать забавные звуки, напоминающие шипение, когда они испуганы, а также громкие звуки, когда они общаются друг с другом.</span>
-        </div>
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=3a81efef1a8dd7ae2e0c620ac26f6545b80f80bc-9168056-images-thumbs&n=13" alt="">
-            <span>При всей своей флегматичности и кажущейся медлительности, капибара – очень быстрое животное. Представляете, они могут удирать со скоростью до 35 км/ч.</span>
-        </div>
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=32d056c7438f2bbaeb655eabce0faa65ea823732-9067891-images-thumbs&n=13" alt="">
-            <span>Капибары имеют очень крепкие зубы и могут легко разжевать даже самые твердые растительные материалы.</span>
-        </div>
-        <div class="img">
-            <img src="https://sun9-6.userapi.com/impg/2T8hEG5D7n59ttWEer2sfe4FuAOBJwk1dmeWbA/rond5d-rWg8.jpg?size=737x877&quality=95&sign=ad1d47cf75703898ff474e4689ed57b8&c_uniq_tag=4fxo2J4rBhzeBI30uY7SWt5RJ5elIns-j-GtrP_KiLY&type=album" alt="">
-            <span>Как и бегемоты, капибары имеют бочкообразное тело. У них маленькая голова. Шерсть на верхней части тела красновато-коричневая, а на животе и ногах — желтовато-коричневая.</span>
-        </div>
     </div>
 
     <div id="contacts">
@@ -125,24 +98,10 @@
             <input type="url" placeholder="Введите url" name="url" id="url"><br>
             <label for="messege">Интересный факт <span>*</span></label><br>
             <textarea placeholder="Введите сообщение" name="messege" id="messege"></textarea><br>
-            <div id="mess_send" class="btn">Отправить </div>
+            <div id="mess_send" class="btn">Отправить</div>
         </form>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script>
-        function slowScroll(id) {
-            $("html, body").animate({
-                scrollTop: $(id).offset().top
-            }, 500);
-        }
-
-        $(document).on("scroll", function () {
-            if ($(window).scrollTop() === 0) {
-                $("header").removeClass("fixed");
-            } else {
-                $("header").attr("class", "fixed");
-            }
-        });
-    </script>
+    <script src="main.js" defer></script>
 </body>
 </html>
