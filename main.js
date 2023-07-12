@@ -1,4 +1,17 @@
-// Функция для сохранения поста в localStorage
+function slowScroll(id) {
+  $("html, body").animate({
+      scrollTop: $(id).offset().top
+  }, 500);
+}
+
+$(document).on("scroll", function () {
+  if ($(window).scrollTop() === 0) {
+      $("header").removeClass("fixed");
+  } else {
+      $("header").attr("class", "fixed");
+  }
+});
+
 function savePostToLocalStorage(name, url, messageText) {
   // Получаем текущий список постов из localStorage
   var posts = JSON.parse(localStorage.getItem('posts')) || [];
@@ -17,45 +30,6 @@ function savePostToLocalStorage(name, url, messageText) {
   localStorage.setItem('posts', JSON.stringify(posts));
 }
 
-function clearLocalStorage() {
-  localStorage.removeItem('posts');
-}
-
-
-function deletePostFromLocalStorage(index) {
-  // Получаем текущий список постов из localStorage
-  var posts = JSON.parse(localStorage.getItem('posts')) || [];
-
-  // Удаляем пост из списка по индексу
-  posts.splice(index, 1);
-
-  // Сохраняем обновленный список постов в localStorage
-  localStorage.setItem('posts', JSON.stringify(posts));
-}
-
-// Функция для отправки сообщения в Telegram
-function sendTelegramMessage(name, url, message) {
-  var telegramBotToken = '6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo';
-  var telegramChatId = '997616670';
-  var telegramMessage = '\n' + name + '\n' + url + '\n' + message + '\n';
-
-  $.ajax({
-    url: 'https://api.telegram.org/bot' + telegramBotToken + '/sendMessage',
-    method: 'POST',
-    data: {
-      chat_id: telegramChatId,
-      text: telegramMessage
-    },
-    success: function (response) {
-      console.log('Сообщение отправлено в Telegram');
-    },
-    error: function (error) {
-      console.log('Ошибка при отправке сообщения в Telegram');
-    }
-  });
-}
-
-// Функция для загрузки постов из localStorage и отображения на странице
 function loadPostsFromLocalStorage() {
   var posts = JSON.parse(localStorage.getItem('posts')) || [];
 
@@ -81,29 +55,35 @@ function loadPostsFromLocalStorage() {
   });
 }
 
-// Функция для плавной прокрутки
-function slowScroll(id) {
-  $("html, body").animate({
-    scrollTop: $(id).offset().top
-  }, 500);
+// Функция для отправки сообщения в Telegram
+function sendTelegramMessage(name, url, message) {
+  var telegramBotToken = '6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo';
+  var telegramChatId = '997616670';
+  var telegramMessage = '\n' + name + '\n' + url + '\n' + message + '\n';
+
+  $.ajax({
+    url: 'https://api.telegram.org/bot' + telegramBotToken + '/sendMessage',
+    method: 'POST',
+    data: {
+      chat_id: telegramChatId,
+      text: telegramMessage
+    },
+    success: function (response) {
+      console.log('Сообщение отправлено в Telegram');
+    },
+    error: function (error) {
+      console.log('Ошибка при отправке сообщения в Telegram');
+    }
+  });
 }
 
-$(document).on("scroll", function () {
-  if ($(window).scrollTop() === 0) {
-    $("header").removeClass("fixed");
-  } else {
-    $("header").attr("class", "fixed");
-  }
-});
-
 $('#mess_send').click(function () {
-
   var name = $('#name').val();
   var url = $('#url').val();
   var message = $('#messege').val();
 
   sendTelegramMessage(name, url, message);
-  savePostToLocalStorage(name, url, message);
+  
 
   $('#name').val('');
   $('#url').val('');
@@ -115,21 +95,23 @@ const ws = new WebSocket('ws://localhost:8080');
 
 // Обработка входящих сообщений от WebSocket
 ws.onmessage = function(event) {
-const messageData = JSON.parse(event.data);
-const text = messageData.text;
-const regex = /([^ \n]+) \n([^ \n]+) \n([^]+)/;
-const [, name, url, messageText] = text.match(regex);
+  const messageData = JSON.parse(event.data);
+  const text = messageData.text;
+  const regex = /([^ \n]+) \n([^ \n]+) \n([^]+)/;
+  const [, name, url, messageText] = text.match(regex);
 
-// Добавляем полученное сообщение в элемент с id "messages"
-const messagesDiv = document.getElementById('messages');
-messagesDiv.innerHTML += `<div class="img">
-    <img title="${name}" src="${url}" alt="">
-    <span>${messageText}</span>
-</div>`;
+  // Добавляем полученное сообщение в элемент с id "messages"
+  const messagesDiv = document.getElementById('messages');
+  messagesDiv.innerHTML += `<div class="img">
+      <img title="${name}" src="${url}" alt="">
+      <span>${messageText}</span>
+  </div>`;
+
+  // Сохраняем сообщение в localStorage
+  savePostToLocalStorage(name, url, messageText);
 };
 
 // При загрузке страницы загружаем посты из localStorage
 window.onload = function() {
   loadPostsFromLocalStorage();
-  // clearLocalStorage();
 };

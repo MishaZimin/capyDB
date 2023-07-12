@@ -6,9 +6,9 @@ const bot = new TelegramBot(token, { polling: true });
 const wss = new WebSocket.Server({ port: 8080 });
 
 
-wss.on('connection', (ws1) => {
+wss.on('connection', (ws) => {
   console.log('Установлено новое WebSocket соединение');
-  ws1.on('message', (message) => {
+  ws.on('message', (message) => {
     console.log('Получено сообщение из WebSocket:', message);
   });
 });
