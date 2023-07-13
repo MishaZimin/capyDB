@@ -13,6 +13,7 @@ wss.on('connection', (ws) => {
   });
 });
 
+
 bot.on('message', (msg) => {
   const messageData = msg;
   console.log('Получено сообщение:', messageData);
