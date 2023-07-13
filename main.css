@@ -167,7 +167,7 @@ header .fixed #logo {
     border-top: 2px solid rgb(181, 181, 181);
     border-bottom: 2px solid rgb(181, 181, 181);
     color: rgb(255, 255, 255);
-    font-size: 1.5em;
+    font-size: 2em;
 }
 
 #main {
@@ -183,7 +183,10 @@ header .fixed #logo {
 }
 
 #main h2 {font-size: 2em}
-#main span {color:rgb(94, 94, 94)}
+#main span {
+    color:rgb(94, 94, 94);
+}
+
 
 /* @media (min-width: 1401px) {
     #main {
@@ -227,7 +230,7 @@ header .fixed #logo {
 }
 
 #overview h2 {
-    font-size: 4em;
+    font-size: 5em;
     padding: 10%;
 }
 
