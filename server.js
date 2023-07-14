@@ -1,16 +1,25 @@
-const express = require('express');
-const app = express();
+const TelegramBot = require('node-telegram-bot-api');
+const WebSocket = require('ws');
+const token = '6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo';
 
-app.use(express.json());
+const bot = new TelegramBot(token, { polling: true });
+const wss = new WebSocket.Server({ port: 8080 });
 
-app.post('	https://webhook.site/f7d4041e-335c-4a95-aa4d-5187eaab4c54', (req, res) => {
-  const message = req.body.message;
-  console.log('Получено сообщение:', message);
-  // Добавьте здесь код для обработки сообщения
 
-  res.sendStatus(200);
+wss.on('connection', (ws) => {
+  console.log('Установлено новое WebSocket соединение');
+  ws.on('message', (message) => {
+    console.log('Получено сообщение из WebSocket:', message);
+  });
 });
 
-app.listen(3000, () => {
-  console.log('Веб-сервер запущен на порту 3000');
+
+bot.on('message', (msg) => {
+  const messageData = msg;
+  console.log('Получено сообщение:', messageData);
+  const messageDataString = JSON.stringify(messageData);
+  wss.clients.forEach((client) => {
+    client.send(messageDataString);
+  });
+  bot.sendMessage(msg.chat.id, 'Получено');
 });
