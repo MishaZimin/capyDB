@@ -10,23 +10,16 @@
     <script src="https://cdn.socket.io/3.1.3/socket.io.js"></script>
 
     <script src="client.js" defer></script>
-
-    <!-- <script src="bot.js" defer></script> -->
 </head>
 <body>
     <header>
         <div id="logo" onclick="slowScroll('#top')">
-            <span>сapybara.ru</span>
-            <!-- <span>logo.</span> -->
+            сapybara.ru
         </div>
         <div id="about">
-            <a href="#" title="Кто такие капибары" onclick="slowScroll('#main')">Капибары</a>
-            <a href="#" title="Интересные факты" onclick="slowScroll('#overview')">Интересные факты</a>
+            <a href="#" title="Кто такие капибары" onclick="slowScroll('#main')">Инфо</a>
+            <a href="#" title="Посты" onclick="slowScroll('#overview')">Посты</a>
             <a href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a>
-
-            <!-- <a href="#" title="Кто" onclick="slowScroll('#main')">информация</a>
-            <a href="#" title="Интересные факты" onclick="slowScroll('#overview')">post</a>
-            <a href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a> -->
 
         </div>
     </header>
@@ -34,75 +27,37 @@
     <div id="top">
         <h1>Капибары</h1>
         <h3>сайт с капибарами</h3>
-        <!-- <h1>Сайт</h1>
-        <h3></h3> -->
     </div>
 
     <div id="main">
         <div class="intro">
             <h2>Капиба́ра</h2>
-            <span></span>
-            <!-- <h2>Lorem, ipsum.</h2>
-            <span>Lorem ipsum dolor sit.</span> -->
         </div>
 
         <div class="text">
             <span> - полуводное травоядное млекопитающее из подсемейства водосвинковых (Hydrochoerinae), один из двух (наряду с малой водосвинкой) ныне существующих видов рода водосвинки. Капибара — самый крупный среди современных грызунов.</span>
-            <!-- <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam sapiente fugit similique quis excepturi perferendis consequatur aspernatur tempora iusto quae.</span> -->
+           
         </div>
     </div>
 
     <div id="overview">
-        <h2>Интересные факты</h2>
-        <!-- <h2>post</h2> -->
-        <h4></h4>
+        <h2>Посты</h2>
+
         <div id="messages"></div>
-
-
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=7899c585cbf72e71128eaa6401334b6e0c9282f1-6493270-images-thumbs&n=13" alt="">
-            <span>Капибары - самые большие грызуны в мире. Взрослые особи могут достигать веса до 70 кг, что примерно в два раза больше, чем у крупнейшей породы кроликов.</span>
-        </div>
-        <div class="img">
-            <img title="админКапибара.ру" src="https://avatars.mds.yandex.net/i?id=bc28154ecc9860909d3106f4d9b0940fdd79fc89-9026739-images-thumbs&n=13" alt="">
-            <span>Они не внесены в красную книгу как исчезающий вид, но их популяция сокращается из-за охоты на них</span>
-        </div>       
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=2a000001892d3163d460199b47c4948f053a-1392821-fast-images&n=13" alt="">
-            <span>Капибары очень социальные животные и обычно живут в больших стадах, состоящих из 10-20 особей. Они даже спят вместе, чтобы сохранять тепло.</span>
-        </div>
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=603db1346329559adff51ab7d0ae536988922ee5-9181172-images-thumbs&n=13" alt="">
-            <span>Капибары обладают отличным плавательным навыком и могут нырять на глубину до 5 метров. </span>
-        </div>
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=2a000001893e9f8a1bc6cfef87c7398c9af2-935048-fast-images&n=13" alt="">
-            <span>Если вы когда-либо увидите капибару, не удивляйтесь, если она позволит вам погладить ее. Они очень доверчивые и не боятся людей.</span>
-        </div>     
-
-        <div class="img">
-            <img src="https://avatars.mds.yandex.net/i?id=4c9a5b605e495d4089e7ef04637b2d0d61f3dae1-9229664-images-thumbs&n=13" alt="">
-            <span>Капибары - вегетарианцы и питаются большим количеством травы, фруктов и растительности. Они могут съедать до 8 кг растительности в день.</span>
-        </div>
-        <div class="img">
-            <img src="http://img-fotki.yandex.ru/get/9154/11786484.dd/0_803a1_c532873e_XXL.jpg" alt="">
-            <span>Капибары очень любят грязь и воду. Они могут проводить часы, купаясь в реках и озерах, а также погружаясь в грязь, чтобы охладиться и защитить свою кожу от насекомых.</span>
-        </div>
+    
     </div>
-
-    <div id="contacts">
+    
+    <div id="contacts" class="contacts">
         <center><h5>Предложка</h5></center>
         <form id="form_input">
             <label for="name">Имя <span>*</span></label><br>
             <input type="text" placeholder="Введите имя" name="name" id="name"><br>
-            <label for="url">Url картинки <span>*</span></label><br>
-            <input type="url" placeholder="Введите url" name="url" id="url"><br>
-            <label for="messege">Интересный факт <span>*</span></label><br>
+            <label for="text">Url картинки <span>*</span></label><br>
+            <input type="text" placeholder="Введите url" name="url" id="url"><br>
+            <label for="messege">Текст поста <span>*</span></label><br>
             <textarea placeholder="Введите сообщение" name="messege" id="messege"></textarea><br>
-            <div id="mess_send" class="btn">Отправить</div>
+            <div id="mess_send" class="btn"><span>Отправить</span></div>
         </form>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="main.js" defer></script>
+    </div>
 </body>
 </html>
