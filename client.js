@@ -401,7 +401,8 @@ $('#mess_send').click(function () {
     $('#messege').val('');
 });
 
-const ws = new WebSocket('ws://steel-invincible-whale.glitch.me');
+const ws = new WebSocket('wss://elderly-smooth-minibus.glitch.me/');
+
 
 
 ws.onopen = function() {
