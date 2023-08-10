@@ -401,7 +401,8 @@ $('#mess_send').click(function () {
     $('#messege').val('');
 });
 
-const ws = new WebSocket('ws://localhost:8080');
+const ws = new WebSocket('ws://steel-invincible-whale.glitch.me');
+
 
 ws.onopen = function() {
     console.log('WebSocket соединение установлено');
