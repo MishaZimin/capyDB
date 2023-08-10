@@ -410,6 +410,7 @@ ws.onopen = function() {
 
 ws.onmessage = function(event) {
     const postsdb = JSON.parse(event.data);
+
     console.log('Получены данные из сервера (ws.onmessage postsdb):', postsdb);
     let posts = [];
 
@@ -418,7 +419,7 @@ ws.onmessage = function(event) {
 
         const message = post.text;
 
-        let name1, url1, messageText1;
+        let name, url, messageText;
 
         const regex = /([^]+) \n([^ \n]+) \n([^]+)/;
 
@@ -426,21 +427,21 @@ ws.onmessage = function(event) {
             const replyMessage = post.reply_to_message;
             const replyText = replyMessage.text;       
             
-            [, name1, url1, messageText1] = replyText.match(regex);
+            [, name, url, messageText] = replyText.match(regex);
         } else {
             const matchResult = message.match(regex);
             if (matchResult) {
-                [, name1, url1, messageText1] = matchResult;
+                [, name, url, messageText] = matchResult;
             }
         }
 
-        console.log('Получены данные name1, url1, messageText1:', name1, url1, messageText1);
+        console.log('Получены данные name, url, messageText1:', name, url, messageText);
 
         var post = {
             id: post.date,
-            name: name1,
-            url: url1,
-            messageText: messageText1,
+            name: name,
+            url: url,
+            messageText: messageText,
             likes: 0,
             timestamp: post.date
         };
@@ -449,38 +450,22 @@ ws.onmessage = function(event) {
         posts.push(post);
     });   
     
-    displayPosts(posts);
+    loadPostsFromDB(posts);
+
     } catch (error) {
-        console.error('Ошибка при получении сообщения из tg:', error);
+        console.error('Ошибка при получении сообщения из tg (нужно обновить страницу хз че это):', error);
     }
 };
 
-
-
-// const socket = new WebSocket('ws://localhost:8080');
-
-// socket.addEventListener('open', async (event) => {
-//   console.log('WebSocket соединение установлено');
-//   socket.send('get_posts'); // Отправляем запрос на получение постов
-// });
-
-// socket.addEventListener('message', async (event) => {
-//   const posts = JSON.parse(event.data);
-// //   console.log('Получены данные из сервера (socket):', posts);
-// //     console.log(posts);
-//   // Обновите интерфейс вашего сайта для отображения полученных постов
-// //   displayPosts(posts);
-// });
-
-function displayPosts(posts) {
+function loadPostsFromDB(posts) {
     var messagesDiv = document.getElementById('messages');
     messagesDiv.innerHTML = '';
     console.log(posts);
     
     posts.forEach(function(post) {
-    var dateAndTime = formatTime(post.timestamp);
-    // Создайте HTML-код для отображения каждого поста и добавьте его в messagesDiv
-    var postHTML = `    
+        var dateAndTime = formatTime(post.timestamp);
+        // Создайте HTML-код для отображения каждого поста и добавьте его в messagesDiv
+        var postHTML = `    
         <div class="post" id="${post.id}">
             <img class="post-img" src="${post.url}" alt="">
             <span class="messageText">${post.messageText}</span>
@@ -523,9 +508,37 @@ function displayPosts(posts) {
     });
 }
 
-window.onload = function() {
-    // loadPostsFromLocalStorage();
-    // clearLocalStorage();
+// window.onload = function() {
+//     // loadPostsFromLocalStorage();
+//     // clearLocalStorage();
+// }
 
-    
-}
+window.onload = function () {
+    // document.body.classList.add('loaded_hiding');
+    // window.setTimeout(function () {
+    //   document.body.classList.add('loaded');
+    //   document.body.classList.remove('loaded_hiding');
+    // }, 500);
+  }
+
+
+
+
+
+
+
+
+// const socket = new WebSocket('ws://localhost:8080');
+
+// socket.addEventListener('open', async (event) => {
+//   console.log('WebSocket соединение установлено');
+//   socket.send('get_posts'); // Отправляем запрос на получение постов
+// });
+
+// socket.addEventListener('message', async (event) => {
+//   const posts = JSON.parse(event.data);
+// //   console.log('Получены данные из сервера (socket):', posts);
+// //     console.log(posts);
+//   // Обновите интерфейс вашего сайта для отображения полученных постов
+// //   loadPostsFromDB(posts);
+// });
