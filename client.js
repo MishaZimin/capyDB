@@ -13,45 +13,6 @@ $(document).on("scroll", function () {
     }
 });
 
-
-// function loadPostsFromServer() {
-//     $.ajax({
-//       url: '/notes',
-//       method: 'GET',
-//       success: function (response) {
-//         var posts = JSON.parse(response);
-//         // Обработка полученных данных
-//         posts.forEach(function(post) {
-//             var dateAndTime = formatTime(post.timestamp);
-    
-//             var postHTML = `
-//             <div class="img" id="${post.id}">
-//                 <img src="${post.url}" alt="">
-//                 <span class="messageText">${post.messageText}</span>
-//                 <div class="like-section">
-//                     <button class="like-button${post.likes > 0 ? ' liked' : ''}" onclick="handleLike(this)">&#x2764;</button>
-//                     <span class="like-counter">${post.likes}</span>
-//                 </div>
-//                 <div class="post-bottom">
-//                     <span class="post-name">Переслано от ${post.name}</span>
-//                     <span class="post-time">${dateAndTime}</span>
-//                 </div>
-//             </div>
-//             `;
-    
-//             messagesDiv.insertAdjacentHTML('afterbegin', postHTML);
-//         });
-//       },
-//       error: function (error) {
-//         console.log('Ошибка при загрузке постов:', error.statusText);
-//       },
-//     });
-//   }
-  
-//   $(document).ready(function () {
-//     loadPostsFromServer();
-//   });
-
 function sendTelegramMessage(name, url, message) {
     var telegramBotToken = '6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo';
     var telegramChatId = '997616670';
@@ -64,8 +25,9 @@ function sendTelegramMessage(name, url, message) {
         data: {
             name: name,
             url: url,
-            messageText: message
-        },
+            messageText: message,
+            timestamp: Math.floor(Date.now() / 1000)
+          },
         success: function (response) {
             console.log('Сообщение отправлено в Telegram');
         },
@@ -82,73 +44,58 @@ function handleLike(button) {
     if (button.classList.contains("liked")) {
         counter.innerText = count - 1;
         button.classList.remove("liked");
-        updateLikeCount(button.closest(".img").id, count - 1);
+        updateLikeCount(button.closest(".post").id, count - 1);
 
-        var postId = button.closest(".img").id;
+        var postId = button.closest(".post").id;
         var likedPosts = getLikedPostsFromLocalStorage();
         var index = likedPosts.indexOf(postId);
         if (index !== -1) {
             likedPosts.splice(index, 1);
-            //saveLikedPostsToLocalStorage(likedPosts);
+            saveLikedPostsToLocalStorage(likedPosts);
             
         }
     } else {
         // Увеличиваем значение счетчика на 1 и обновляем его
         counter.innerText = count + 1;
         button.classList.add("liked");
-        updateLikeCount(button.closest(".img").id, count + 1); // Обновляем значение счетчика лайков в localStorage
+        updateLikeCount(button.closest(".post").id, count + 1); // Обновляем значение счетчика лайков в localStorage
 
         // Сохраняем информацию о нажатии кнопки лайка в localStorage
-        var postId = button.closest(".img").id;
+        var postId = button.closest(".post").id;
         var likedPosts = getLikedPostsFromLocalStorage();
         likedPosts.push(postId);
-        //saveLikedPostsToLocalStorage(likedPosts);
+        saveLikedPostsToLocalStorage(likedPosts);
         
     }
-    //loadPostsFromServer();
+    loadPostsFromLocalStorage();
 }
 
-function savePostToServer(name, url, messageText, timestamp) {
+function savePostToLocalStorage(name, url, messageText, timestamp) {
+    var posts = getPostsFromLocalStorage();
+
     var post = {
-      name: name,
-      url: url,
-      messageText: messageText,
-      likes: 0,
-      timestamp: timestamp,
+        id: Date.now().toString(),
+        name: name,
+        url: url,
+        messageText: messageText,
+        likes: 0,
+        timestamp: timestamp
     };
-  
-    $.ajax({
-      url: 'http://localhost:3000/api/posts', // Замените на точку входа вашего сервера для сохранения постов
-      method: 'POST',
-      data: post,
-      success: function (response) {
-        console.log('Пост успешно сохранен в MongoDB');
-      },
-      error: function (error) {
-        console.log('Ошибка при сохранении поста в MongoDB:', error.statusText);
-      },
-    });
-  }
+
+    posts.push(post);
+    savePostsToLocalStorage(posts);
+}
 
 
 function updateLikeCount(postId, count) {
-    var postToUpdate = findPostById(postId);
+    var posts = getPostsFromLocalStorage();
+    var postToUpdate = findPostById(posts, postId);
   
     if (postToUpdate) {
       postToUpdate.likes = count;
-      $.ajax({
-        url: `http://localhost:3000/api/posts/${postId}`, // Замените на точку входа вашего сервера для обновления поста
-        method: 'PUT',
-        data: postToUpdate,
-        success: function (response) {
-          console.log('Количество лайков поста успешно обновлено');
-        },
-        error: function (error) {
-          console.log('Ошибка при обновлении количества лайков поста:', error.statusText);
-        },
-      });
+      savePostsToLocalStorage(posts);
     }
-  }
+}
 
 function findPostById(posts, postId) {
     return posts.find(function(post) {
@@ -172,218 +119,182 @@ function saveLikedPostsToLocalStorage(likedPosts) {
     localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
 }
 
-function getPostsFromServer() {
-    // Загрузка постов из MongoDB
-    $.ajax({
-        url: 'http://localhost:3000/api/posts',
-        method: 'GET',
-        success: function (response) {
-            var posts = response;
-            // Обработка полученных данных
-            var messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML = '';
+const messages = [];
+
+// Получение сообщения и добавление его в массив
+const receivedMessage = {
+    message_id: 1205,
+    from: {
+      id: 997616670,
+      is_bot: false,
+      first_name: 'Миша',
+      username: 'mi424sha',
+      language_code: 'ru'
+    },
+    chat: {
+      id: 997616670,
+      first_name: 'Миша',
+      username: 'mi424sha',
+      type: 'private'
+    },
+    date: 1691418745,
+    reply_to_message: {
+      message_id: 1204,
+      from: {
+        id: 6392841364,
+        is_bot: true,
+        first_name: 'bot',
+        username: 'hjfdjhfjd_bot'
+      },
+      chat: {
+        id: 997616670,
+        first_name: 'Миша',
+        username: 'mi424sha',
+        type: 'private'
+      },
+      date: 1691418737,
+      text: 'test \n' +
+        'https://avatars.mds.yandex.net/i?id=886c2195058947b4cd8e7bd65e8dd619730269dc-4835468-images-thumbs&n=13 \n' +
+        "Test (assessment), an educational assessment intended to measure the respondents' knowledge or other abilities",
+      entities: [ [Object] ]
+    },
+    text: 'fdfd'
+};
+
+
+
+function loadPostsFromLocalStorage() {
+    var posts = getPostsFromLocalStorage();
+
+    // posts.sort(function(a, b) {
+    //     return a.likes - b.likes;
+    // }); // sort by likes count
+
+    var messagesDiv = document.getElementById('messages');
+    messagesDiv.innerHTML = '';
+
     
-            posts.forEach(function (post) {
-                var dateAndTime = formatTime(post.timestamp);
-    
-                var postHTML = `
-                <div class="img" id="${post._id}">
-                    <img class="post-img" src="${post.url}" alt="">
-                    <span class="messageText">${post.messageText}</span>
-                    <div class="like-section">
-                        <button class="like-button${post.likes > 0 ? ' liked' : ''}" onclick="handleLike(this)">&#x2764;</button>
-                        <span class="like-counter">${post.likes}</span>
+    posts.forEach(function(post) {
+        var dateAndTime = formatTime(post.timestamp);
+        var comments = getCommentsFromLocalStorage(post.id);
+
+        var postHTML = `    
+        <div class="post" id="${post.id}">
+            <img class="post-img" src="${post.url}" alt="">
+            <span class="messageText">${post.messageText}</span>
+            <div class="like-section">
+                <button class="like-button${post.likes > 0 ? ' liked' : ''}" onclick="handleLike(this)">&#x2764;</button>
+                <span class="like-counter">${post.likes}</span>
+            </div>
+            <div class="post-bottom">
+                <span class="post-name">от: <b>${post.name}</b></span>
+                <span class="post-time">${dateAndTime}</span>
+            </div>
+
+            <div class="comments">              
+                <button class="collapse-button" onclick="toggleComments(${post.id})">
+                    <b>Комментарии</b>  ${comments.length} 
+                </button>
+                <div class="comment-list" id="comments-${post.id}">
+                    <div class="comment-container">
+                        <!-- здесь будут комментарии -->
                     </div>
-                    <div class="post-bottom">
-                        <span class="post-name">от: <b>${post.name}</b></span>
-                        <span class="post-time">${dateAndTime}</span>
-                    </div>
-        
-                    <div class="comments">              
-                        <button class="collapse-button" onclick="toggleComments('${post._id}')">Комментарии</button><br>
-                        <div class="comment-list" id="comments-${post._id}">
-                            <!-- здесь будут комментарии -->
-                        </div>
-                        <div class="add-comment">
-                            <input type="text" id="comment-input-${post._id}" placeholder="Ваш комментарий">
-                            
-                            <button onclick="clearComments('${post._id}')">             
-                                &#10006;              
-                            </button>
-        
-                            <button onclick="addComment('${post._id}')">
-                                &#10095; 
-                            </button>
-                        </div>
+                    <div class="add-comment">
+                        <input type="text-comment" id="comment-input-${post.id}" placeholder="комментарий">
+                        
+                        <button onclick="clearComments(${post.id})">             
+                            &#10006;              
+                        </button>
+
+                        <button onclick="addComment(${post.id})">                      
+                            &#10095; 
+                        </button>
                     </div>
                 </div>
-                `;
-    
-                messagesDiv.insertAdjacentHTML('afterbegin', postHTML);
-            });
-        },
-        error: function (error) {
-            console.log('Ошибка при загрузке постов из MongoDB:', error.statusText);
-        },
+                
+            </div>
+        </div>
+        `;
+
+        messagesDiv.insertAdjacentHTML('afterbegin', postHTML);
+        var commentsDiv = document.getElementById(`comments-${post.id}`);
+        commentsDiv.style.display = 'none';
+        //loadCommentsFromLocalStorage(post.id); // Загружаем комментарии для данного поста
     });
 }
 
-// Загрузка постов из MongoDB при загрузке страницы
-$(document).ready(function () {
-    loadPostsFromServer();
-});
-
-function loadPostsFromServer() {
-    $.ajax({
-      url: 'http://localhost:3000/api/posts', // Измените на соответствующий URL вашего сервера
-      method: 'GET',
-      success: function (response) {
-        var posts = response; // Полученные данные из MongoDB
-        // Обработка полученных данных
-        var messagesDiv = document.getElementById('messages');
-        messagesDiv.innerHTML = '';
-  
-        posts.forEach(function (post) {
-          var dateAndTime = formatTime(post.timestamp);
-  
-          var postHTML = `
-          <div class="img" id="${post._id}">
-              <img class="post-img" src="${post.url}" alt="">
-              <span class="messageText">${post.messageText}</span>
-              <div class="like-section">
-                  <button class="like-button${post.likes > 0 ? ' liked' : ''}" onclick="handleLike(this)">&#x2764;</button>
-                  <span class="like-counter">${post.likes}</span>
-              </div>
-              <div class="post-bottom">
-                  <span class="post-name">от: <b>${post.name}</b></span>
-                  <span class="post-time">${dateAndTime}</span>
-              </div>
-  
-              <div class="comments">              
-                  <button class="collapse-button" onclick="toggleComments('${post._id}')">Комментарии</button><br>
-                  <div class="comment-list" id="comments-${post._id}">
-                      <!-- здесь будут комментарии -->
-                  </div>
-                  <div class="add-comment">
-                      <input type="text" id="comment-input-${post._id}" placeholder="Ваш комментарий">
-                      
-                      <button onclick="clearComments('${post._id}')">             
-                          &#10006;              
-                      </button>
-  
-                      <button onclick="addComment('${post._id}')">
-                          &#10095; 
-                      </button>
-                  </div>
-              </div>
-          </div>
-          `;
-  
-          messagesDiv.insertAdjacentHTML('afterbegin', postHTML);
-        });
-      },
-      error: function (error) {
-        console.log('Ошибка при загрузке постов:', error.statusText);
-      },
-    });
+function scrollToBottom(postId) {
+    var commentsDiv = document.getElementById(`comments-${postId}`);
+    commentsDiv.scrollTop = commentsDiv.scrollHeight;
 }
-  
 
-// function loadPostsFromServer() {
-//     var posts = getPostsFromLocalStorage();
-
-//     posts.sort(function(a, b) {
-//         return a.likes - b.likes;
-//     });
-
-//     var messagesDiv = document.getElementById('messages');
-//     messagesDiv.innerHTML = '';
-
-//     posts.forEach(function(post) {
-//         var dateAndTime = formatTime(post.timestamp);
-
-//         var postHTML = `
-//         <div class="img" id="${post.id}">
-//             <img class="post-img" src="${post.url}" alt="">
-//             <span class="messageText">${post.messageText}</span>
-//             <div class="like-section">
-//                 <button class="like-button${post.likes > 0 ? ' liked' : ''}" onclick="handleLike(this)">&#x2764;</button>
-//                 <span class="like-counter">${post.likes}</span>
-//             </div>
-//             <div class="post-bottom">
-//                 <span class="post-name">от: <b>${post.name}</b></span>
-//                 <span class="post-time">${dateAndTime}</span>
-//             </div>
-
-//             <div class="comments">              
-//                 <button class="collapse-button" onclick="toggleComments(${post.id})">Комментарии</button><br>
-//                 <div class="comment-list" id="comments-${post.id}">
-//                     <!-- здесь будут комментарии -->
-//                 </div>
-//                 <div class="add-comment">
-//                     <input type="text-comment" id="comment-input-${post.id}" placeholder="Ваш комментарий">
-                    
-//                     <button onclick="clearComments(${post.id})">             
-//                         &#10006;              
-//                     </button>
-
-//                     <button onclick="addComment(${post.id})">
-                        
-//                         &#10095; 
-//                     </button>
-//                 </div>
-//             </div>
-//         </div>
-//         `;
-
-//         messagesDiv.insertAdjacentHTML('afterbegin', postHTML);
-        
-//         //loadCommentsFromLocalStorage(post.id); // Загружаем комментарии для данного поста
-//     });
-// }
 
 function clearComments(postId) {
     var commentsDiv = document.getElementById(`comments-${postId}`);
-    commentsDiv.innerHTML = ''; // Очищаем отображение комментариев
+    commentsDiv.innerHTML = '';
 
-    // Удаляем комментарии из локального хранилища
     saveCommentsToLocalStorage(postId, []);
+    loadPostsFromLocalStorage(postId)
+    loadCommentsFromLocalStorage(postId);
+    commentsDiv.style.display = 'none';
 }
 
 function toggleComments(postId) {
     var commentsDiv = document.getElementById(`comments-${postId}`);
-    var addCommentDiv = document.querySelector(`#comments-${postId} .add-comment`);
-    var commentListContent = document.getElementById(`comment-list-content-${postId}`);
-
-    if (!commentListContent) {
-        // Если элемент comment-list-content не существует, создаем его и вставляем внутрь контейнера comments
-        commentListContent = document.createElement('div');
-        commentListContent.setAttribute('id', `comment-list-content-${postId}`);
-        commentsDiv.appendChild(commentListContent);
+    var commentContainer = document.getElementById(`comment-container-${postId}`);
+    
+    if (!commentContainer) {
+        commentContainer = document.createElement('div');
+        commentContainer.setAttribute('id', `comment-container-${postId}`);
+        commentsDiv.appendChild(commentContainer);
     }
 
     if (commentsDiv.style.display === 'none' || commentsDiv.style.display === '') {
-        // Комментарии еще не отображены, загружаем и показываем
-        commentListContent.innerHTML = ''; // Сначала очистим содержимое, чтобы избежать дублирования комментариев при повторных кликах
-        loadCommentsFromLocalStorage(postId, commentListContent); // Передаем commentListContent в качестве второго аргумента
-
-        //commentsDiv.style.display = 'block';
+        commentContainer.innerHTML = '';
+        loadCommentsFromLocalStorage(postId, commentContainer);
     } else {
-        // Комментарии уже отображены, скрываем их
-        commentsDiv.style.display = 'none';
-    }
-
-    
+        commentsDiv.style.display = 'none';       
+    } 
 }
 
 
+function isCommentValid(comment) {
+    var banWords = ["бля", "хуй", "сук", "еба", "ебу", "пизд"];
+
+    for (var i = 0; i < banWords.length; i++) {
+        if (comment.indexOf(banWords[i]) !== -1) {
+            return false;
+        }
+    }
+    return true;
+}
 
 // Функция добавления комментария
 function addComment(postId) {
     var commentInput = document.getElementById(`comment-input-${postId}`);
     var commentText = commentInput.value.trim();
     if (!commentText) {
-        alert('Пожалуйста, введите комментарий.');
+        alert('введите коммент');
+        return;
+    }
+
+    if (!isCommentValid(commentText)) {
+        alert('пошел нахуй уебан');
+        return;
+    }
+
+    if (commentText.length > 200) {
+        alert('коммент слишком длинный, максимальная длина - 200 символов');
+        return;
+    }
+
+    var words = commentText.split(' ');
+    var isInvalidWordLength = words.some(function(word) {
+        return word.length > 18;
+    });
+
+    if (isInvalidWordLength) {
+        alert('какое-то слово в комменте длинне 18 символов');
         return;
     }
 
@@ -398,10 +309,6 @@ function addComment(postId) {
         'https://avatars.mds.yandex.net/i?id=446edff486f12589defc380337cedb73969b09d3-9589172-images-thumbs&n=13',
         'https://avatars.mds.yandex.net/i?id=4048803598b8161035afd54a2222509fa398a7c9-8427413-images-thumbs&n=13',
         'https://avatars.mds.yandex.net/i?id=edae7179de7094050a8f791949a7c6856aadc8e7-9699538-images-thumbs&n=13',
-        'https://sun6-20.userapi.com/impg/9TVl43WVejRnppg5eb-S0bCTL8abyPj-tWViJg/GgzmsahT_bM.jpg?size=558x604&quality=95&sign=0911bcee0b8f82685f837704c2227973&c_uniq_tag=nl3FCr16LgGtkNuigLKeGi119Uyv-LvY_pV4-OMTATI&type=album',
-        'https://sun9-51.userapi.com/impg/6-gx5sCHOiqah-KhkQHwGRKjrDsuIysVmQWIxw/lorjq2XvtAg.jpg?size=1000x1000&quality=95&sign=4e45e8ba7e24444239cb399edef3b132&type=album',
-        'https://sun9-52.userapi.com/impg/640lEsuO26RwdILDdjUgWghaVIjTBk1gSQGTSg/2bbZ0N-oKC0.jpg?size=807x634&quality=95&sign=81ba3178a69695c1f6e1035022df0e8d&c_uniq_tag=66T-ZYI_R5pzaJjWaNlNnNYxnjcUf7mo81BbBOIaavk&type=album',
-        'https://sun9-22.userapi.com/impg/GMWUpnWKiYDp39EZLriVq9tCw8hfA5HdeKgrVg/hXE6XEaQHyE.jpg?size=807x511&quality=95&sign=e8d9a1010bb515b53b9a2dad07fa7dab&c_uniq_tag=-NGf9hGC23FDbZarXxvHqu_qh_gLFDCIr_EczTeCvOo&type=album',
         'https://avatars.mds.yandex.net/i?id=766f85e0244cca60524f0d952422acee862b383f-8564741-images-thumbs&n=13',
         'https://avatars.mds.yandex.net/i?id=444d3714437929a22d186b8a702e1967cc7b6e70-9101109-images-thumbs&n=13',
         'https://avatars.mds.yandex.net/i?id=c8bc077579879db179364499f6bef2bd398176aa-9182438-images-thumbs&n=13',
@@ -416,42 +323,25 @@ function addComment(postId) {
     var randomAvatarUrl = avatarUrls[randomIndex];
 
     var comments = getCommentsFromLocalStorage(postId);
-    var commentId = Date.now().toString(); // Уникальный id для комментария
+    var commentId = Date.now().toString();
+    var commentName = "@capybara"; 
 
     var comment = {
         id: commentId,
+        name: commentName + commentId,
+        likes: 0,
         text: commentText,
         avatar: randomAvatarUrl,
-      };
-    
-      $.ajax({
-        url: `http://localhost:3000/api/posts/${postId}/comments`, // Замените на точку входа вашего сервера для добавления комментариев
-        method: 'POST',
-        data: comment,
-        success: function (response) {
-          console.log('Комментарий успешно добавлен в MongoDB');
-        },
-        error: function (error) {
-          console.log('Ошибка при добавлении комментария в MongoDB:', error.statusText);
-        },
-      });
-}
+        timestamp: Math.floor(Date.now() / 1000)
+    };
 
-function loadCommentsFromServer(postId) {
-    $.ajax({
-      url: `http://localhost:3000/api/posts/${postId}/comments`, // Замените на точку входа вашего сервера для получения комментариев для поста
-      method: 'GET',
-      success: function (response) {
-        var comments = response;
-        // Остальной код для отображения комментариев
-        // ...
-      },
-      error: function (error) {
-        console.log('Ошибка при загрузке комментариев из MongoDB:', error.statusText);
-      },
-    });
-  }
-  
+    comments.push(comment);
+    saveCommentsToLocalStorage(postId, comments);
+
+    commentInput.value = '';
+    loadPostsFromLocalStorage(postId)
+    loadCommentsFromLocalStorage(postId);
+}
 
 function getAvatarImage(avatarUrl) {
     return `<img src="${avatarUrl}" alt="Avatar">`;
@@ -464,7 +354,7 @@ function formatTime(timestamp) {
     var day = addLeadingZero(date.getDate());
     var month = addLeadingZero(date.getMonth() + 1);
   
-    var formattedDateAndTime = day + '/' + month + ' ' + hours + ':' + minutes;
+    var formattedDateAndTime = hours + ':' + minutes + ' ' + day + '/' + month;
   
     return formattedDateAndTime;
 }
@@ -503,13 +393,36 @@ function loadCommentsFromLocalStorage(postId) {
                 <div class="avatar">
                     <img src="${comment.avatar}" alt="Avatar">
                 </div>
-                <span>${comment.text}</span>
+                <span class="comment-text">
+                    <p class="comment-name">${comment.name}</p>
+                    ${comment.text}
+                </span>
+                <span class="comment-right">
+                    <p class="comment-time">
+                        ${formatTime(comment.timestamp)}
+                    </p>
+                </span>
             </div>
         `;
         commentsDiv.insertAdjacentHTML('beforeend', commentHTML);
     });
 
-    // Показываем контейнер для комментариев
+    var addCommentHTML = `
+        <div class="add-comment" id="comment-${postId}">
+            <input type="text-comment" id="comment-input-${postId}" placeholder="комментарий">
+            
+            <button onclick="clearComments(${postId})">             
+                &#10006;              
+            </button>
+
+            <button onclick="addComment(${postId})">                      
+                &#10095; 
+            </button>
+        </div>
+    `;
+
+    commentsDiv.insertAdjacentHTML('afterbegin', addCommentHTML);
+
     commentsDiv.style.display = 'block';
 }
 
@@ -533,30 +446,125 @@ $('#mess_send').click(function () {
 
 const ws = new WebSocket('ws://localhost:8080');
 
+ws.onopen = function() {
+    console.log('WebSocket соединение установлено');
+    ws.send('get_posts'); // Отправляем запрос на получение постов
+  };
+
 ws.onmessage = function(event) {
-    const messageData = JSON.parse(event.data);
-    const message = messageData.text;
+    const postsdb = JSON.parse(event.data);
+    console.log('Получены данные из сервера (ws.onmessage):', postsdb);
+    let posts = [];
+    postsdb.forEach(function(post) {
 
-    let name, url, messageText;
+        const message = post.text;
 
-    const regex = /([^]+) \n([^ \n]+) \n([^]+)/;
+        let name1, url1, messageText1;
 
-    if (messageData.reply_to_message) {
-        const replyMessage = messageData.reply_to_message;
-        const replyText = replyMessage.text;       
-        
-        [, name, url, messageText] = replyText.match(regex);
-    } else {
-        const matchResult = message.match(regex);
-        if (matchResult) {
-        [, name, url, messageText] = matchResult;
-    }}
+        const regex = /([^]+) \n([^ \n]+) \n([^]+)/;
 
-    //savePostToLocalStorage(name, url, messageText, messageData.date);
-    loadPostsFromServer();
+        if (post.reply_to_message) {
+            const replyMessage = post.reply_to_message;
+            const replyText = replyMessage.text;       
+            
+            [, name1, url1, messageText1] = replyText.match(regex);
+        } else {
+            const matchResult = message.match(regex);
+            if (matchResult) {
+                [, name1, url1, messageText1] = matchResult;
+            }
+        }
+
+        console.log('Получены данные name1, url1, messageText1:', name1, url1, messageText1);
+
+        var post = {
+            id: Date.now().toString(),
+            name: name1,
+            url: url1,
+            messageText: messageText1,
+            likes: 0,
+            timestamp: '10:00'
+        };
+
+        console.log('Получены данные post:', post);
+        posts.push(post);
+    }); 
+
+
+    
+    
+    displayPosts(posts);
 };
 
+
+
+const socket = new WebSocket('ws://localhost:8080');
+
+socket.addEventListener('open', async (event) => {
+  console.log('WebSocket соединение установлено');
+  socket.send('get_posts'); // Отправляем запрос на получение постов
+});
+
+socket.addEventListener('message', async (event) => {
+  const posts = JSON.parse(event.data);
+//   console.log('Получены данные из сервера (socket):', posts);
+//     console.log(posts);
+  // Обновите интерфейс вашего сайта для отображения полученных постов
+//   displayPosts(posts);
+});
+
+function displayPosts(posts) {
+  var messagesDiv = document.getElementById('messages');
+  messagesDiv.innerHTML = '';
+  console.log(posts);
+  
+  posts.forEach(function(post) {
+    var dateAndTime = formatTime(post.timestamp);
+    // Создайте HTML-код для отображения каждого поста и добавьте его в messagesDiv
+    var postHTML = `    
+        <div class="post" id="${post.id}">
+            <img class="post-img" src="${post.url}" alt="">
+            <span class="messageText">${post.messageText}</span>
+            <div class="like-section">
+                <button class="like-button" onclick="handleLike(this)">&#x2764;</button>
+                <span class="like-counter"></span>
+            </div>
+            <div class="post-bottom">
+                <span class="post-name">от: <b>${post.name}</b></span>
+                <span class="post-time">${post.timestamp}</span>
+            </div>
+
+            <div class="comments">              
+                <button class="collapse-button" onclick="toggleComments(${post.id})">
+                    <b>Комментарии</b>
+                </button>
+                <div class="comment-list" id="comments-${post.id}">
+                    <div class="comment-container">
+                        <!-- здесь будут комментарии -->
+                    </div>
+                    <div class="add-comment">
+                        <input type="text-comment" id="comment-input-${post.id}" placeholder="комментарий">
+                        
+                        <button onclick="clearComments(${post.id})">             
+                            &#10006;              
+                        </button>
+
+                        <button onclick="addComment(${post.id})">                      
+                            &#10095; 
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        `;
+        messagesDiv.insertAdjacentHTML('afterbegin', postHTML);
+  });
+}
+
 window.onload = function() {
-    loadPostsFromServer();
-    //clearLocalStorage();
+    // loadPostsFromLocalStorage();
+    // clearLocalStorage();
+
+    
 }

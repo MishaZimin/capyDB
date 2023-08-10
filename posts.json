@@ -1,0 +1,40 @@
+[
+    {
+      "message_id": 1205,
+      "from": {
+        "id": 997616670,
+        "is_bot": false,
+        "first_name": "Миша",
+        "username": "mi424sha",
+        "language_code": "ru"
+      },
+      "chat": {
+        "id": 997616670,
+        "first_name": "Миша",
+        "username": "mi424sha",
+        "type": "private"
+      },
+      "date": 1691418745,
+      "reply_to_message": {
+        "message_id": 1204,
+        "from": {
+          "id": 6392841364,
+          "is_bot": true,
+          "first_name": "bot",
+          "username": "hjfdjhfjd_bot"
+        },
+        "chat": {
+          "id": 997616670,
+          "first_name": "Миша",
+          "username": "mi424sha",
+          "type": "private"
+        },
+        "date": 1691418737,
+        "text": "test \n https://avatars.mds.yandex.net/i?id=886c2195058947b4cd8e7bd65e8dd619730269dc-4835468-images-thumbs&n=13 \n Test (assessment), an educational assessment intended to measure the respondents' knowledge or other abilities",
+        "entities": [ {"object":"Object"} ]
+      },
+      "text": "fdfd"
+    }
+]
+  
+  

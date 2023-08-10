@@ -2,6 +2,10 @@
 
 // const mongoUrl = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/'; // Замените на свою строку подключения
 
+
+//mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/
+
+
 // async function connectToDatabase() {
 //   const client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 //   console.log('Подключено к базе данных');
@@ -26,32 +30,32 @@
 
 
 
-const { MongoClient } = require('mongodb');
+// const { MongoClient } = require('mongodb');
 
-const uri = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/';
+// const uri = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/';
 
-async function saveDataToDatabase(data) {
-  try {
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// async function saveDataToDatabase(data) {
+//   try {
+//     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    // Подключение к базе данных
-    await client.connect();
+//     // Подключение к базе данных
+//     await client.connect();
 
-    // Выполнение операций с базой данных
-    const db = client.db('mydatabase');
-    const collection = db.collection('posts');
-    await collection.insertOne(data);
+//     // Выполнение операций с базой данных
+//     const db = client.db('mydatabase');
+//     const collection = db.collection('posts');
+//     await collection.insertOne(data);
 
-    // Закрытие соединения с базой данных
-    client.close();
-  } catch (error) {
-    console.error('Ошибка при сохранении данных в базу данных:', error);
-  }
-}
+//     // Закрытие соединения с базой данных
+//     client.close();
+//   } catch (error) {
+//     console.error('Ошибка при сохранении данных в базу данных:', error);
+//   }
+// }
 
-module.exports = { saveDataToDatabase };
+// module.exports = { saveDataToDatabase };
 
-db.js
-module.exports = {
-  url : 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/',
-};
+// db.js
+// module.exports = {
+//   url : 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/',
+// };

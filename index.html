@@ -8,56 +8,67 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.socket.io/3.1.3/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script src="client.js" defer></script>
 </head>
-<body>
-    <header>
-        <div id="logo" onclick="slowScroll('#top')">
-            сapybara.ru
-        </div>
-        <div id="about">
-            <a href="#" title="Кто такие капибары" onclick="slowScroll('#main')">Инфо</a>
-            <a href="#" title="Посты" onclick="slowScroll('#overview')">Посты</a>
-            <a href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a>
+    <body>
+        <header>
+            <div id="logo" onclick="slowScroll('#top')">
+                capy
+            </div>
+            <div id="about">
+                <a class="info-head" href="#" title="Кто такие капибары" onclick="slowScroll('#main')">Инфо</a>
+                <a class="post-head" href="#" title="Посты" onclick="slowScroll('#overview')">Посты</a>
+                <a class="out-post-head" href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a>
+
+            </div>
+        </header>
+
+        <div id="top">
+            <h1>Капибары</h1>
+            <h3>сайт с капибарами</h3>
 
         </div>
-    </header>
 
-    <div id="top">
-        <h1>Капибары</h1>
-        <h3>сайт с капибарами</h3>
-    </div>
+        <div id="main"> 
+            <div class="intro">
+                <h2>Капиба́ра</h2>
+            </div>
 
-    <div id="main">
-        <div class="intro">
-            <h2>Капиба́ра</h2>
+            <div class="text">
+                <span> - полуводное травоядное млекопитающее из подсемейства водосвинковых (Hydrochoerinae), один из двух (наряду с малой водосвинкой) ныне существующих видов рода водосвинки. Капибара — самый крупный среди современных грызунов.</span>
+            
+            </div>
         </div>
 
-        <div class="text">
-            <span> - полуводное травоядное млекопитающее из подсемейства водосвинковых (Hydrochoerinae), один из двух (наряду с малой водосвинкой) ныне существующих видов рода водосвинки. Капибара — самый крупный среди современных грызунов.</span>
-           
+        <div id="overview">
+            <h2>Посты</h2>
+
+            <!-- <input type="text" id="searchInput" placeholder="Поиск...">
+            <div id="searchResults"></div> -->
+
+            <div id="posts-container"></div>
+
+            <div id="messages"></div>
+
+        
         </div>
-    </div>
-
-    <div id="overview">
-        <h2>Посты</h2>
-
-        <div id="messages"></div>
-    
-    </div>
-    
-    <div id="contacts" class="contacts">
-        <center><h5>Предложка</h5></center>
-        <form id="form_input">
-            <label for="name">Имя <span>*</span></label><br>
-            <input type="text" placeholder="Введите имя" name="name" id="name"><br>
-            <label for="text">Url картинки <span>*</span></label><br>
-            <input type="text" placeholder="Введите url" name="url" id="url"><br>
-            <label for="messege">Текст поста <span>*</span></label><br>
-            <textarea placeholder="Введите сообщение" name="messege" id="messege"></textarea><br>
-            <div id="mess_send" class="btn"><span>Отправить</span></div>
-        </form>
-    </div>
-</body>
+        
+        <div id="contacts" class="contacts">
+            <center><h5>Предложка</h5></center>
+            <form id="form_input">
+                <label for="name">Имя <span>*</span></label><br>
+                <input type="text" placeholder="Введите имя" name="name" id="name"><br>
+                <label for="text">Url картинки <span>*</span></label><br>
+                <input type="text" placeholder="Введите url" name="url" id="url"><br>
+                <label for="messege">Текст поста <span>*</span></label><br>
+                <textarea placeholder="Введите сообщение" name="messege" id="messege"></textarea><br>
+                <div id="mess_send" class="btn"><span>Отправить</span></div>
+            </form>
+        </div>
+    </body>
+    <footer>
+        <code>.</code>
+    </footer>
 </html>
