@@ -23,11 +23,9 @@ function sendTelegramMessage(name, url, message) {
         url: 'https://api.telegram.org/bot' + telegramBotToken + '/sendMessage',
         method: 'POST',
         data: {
-            name: name,
-            url: url,
-            messageText: message,
-            timestamp: Math.floor(Date.now() / 1000)
-          },
+            chat_id: telegramChatId,
+            text: telegramMessage
+        },
         success: function (response) {
             console.log('Сообщение отправлено в Telegram');
         },
@@ -119,47 +117,6 @@ function saveLikedPostsToLocalStorage(likedPosts) {
     localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
 }
 
-const messages = [];
-
-// Получение сообщения и добавление его в массив
-const receivedMessage = {
-    message_id: 1205,
-    from: {
-      id: 997616670,
-      is_bot: false,
-      first_name: 'Миша',
-      username: 'mi424sha',
-      language_code: 'ru'
-    },
-    chat: {
-      id: 997616670,
-      first_name: 'Миша',
-      username: 'mi424sha',
-      type: 'private'
-    },
-    date: 1691418745,
-    reply_to_message: {
-      message_id: 1204,
-      from: {
-        id: 6392841364,
-        is_bot: true,
-        first_name: 'bot',
-        username: 'hjfdjhfjd_bot'
-      },
-      chat: {
-        id: 997616670,
-        first_name: 'Миша',
-        username: 'mi424sha',
-        type: 'private'
-      },
-      date: 1691418737,
-      text: 'test \n' +
-        'https://avatars.mds.yandex.net/i?id=886c2195058947b4cd8e7bd65e8dd619730269dc-4835468-images-thumbs&n=13 \n' +
-        "Test (assessment), an educational assessment intended to measure the respondents' knowledge or other abilities",
-      entities: [ [Object] ]
-    },
-    text: 'fdfd'
-};
 
 
 
@@ -234,7 +191,7 @@ function clearComments(postId) {
     commentsDiv.innerHTML = '';
 
     saveCommentsToLocalStorage(postId, []);
-    loadPostsFromLocalStorage(postId)
+    //loadPostsFromLocalStorage(postId)
     loadCommentsFromLocalStorage(postId);
     commentsDiv.style.display = 'none';
 }
@@ -453,8 +410,10 @@ ws.onopen = function() {
 
 ws.onmessage = function(event) {
     const postsdb = JSON.parse(event.data);
-    console.log('Получены данные из сервера (ws.onmessage):', postsdb);
+    console.log('Получены данные из сервера (ws.onmessage postsdb):', postsdb);
     let posts = [];
+
+    try {
     postsdb.forEach(function(post) {
 
         const message = post.text;
@@ -478,47 +437,47 @@ ws.onmessage = function(event) {
         console.log('Получены данные name1, url1, messageText1:', name1, url1, messageText1);
 
         var post = {
-            id: Date.now().toString(),
+            id: post.date,
             name: name1,
             url: url1,
             messageText: messageText1,
             likes: 0,
-            timestamp: '10:00'
+            timestamp: post.date
         };
 
         console.log('Получены данные post:', post);
         posts.push(post);
-    }); 
-
-
-    
+    });   
     
     displayPosts(posts);
+    } catch (error) {
+        console.error('Ошибка при получении сообщения из tg:', error);
+    }
 };
 
 
 
-const socket = new WebSocket('ws://localhost:8080');
+// const socket = new WebSocket('ws://localhost:8080');
 
-socket.addEventListener('open', async (event) => {
-  console.log('WebSocket соединение установлено');
-  socket.send('get_posts'); // Отправляем запрос на получение постов
-});
+// socket.addEventListener('open', async (event) => {
+//   console.log('WebSocket соединение установлено');
+//   socket.send('get_posts'); // Отправляем запрос на получение постов
+// });
 
-socket.addEventListener('message', async (event) => {
-  const posts = JSON.parse(event.data);
-//   console.log('Получены данные из сервера (socket):', posts);
-//     console.log(posts);
-  // Обновите интерфейс вашего сайта для отображения полученных постов
-//   displayPosts(posts);
-});
+// socket.addEventListener('message', async (event) => {
+//   const posts = JSON.parse(event.data);
+// //   console.log('Получены данные из сервера (socket):', posts);
+// //     console.log(posts);
+//   // Обновите интерфейс вашего сайта для отображения полученных постов
+// //   displayPosts(posts);
+// });
 
 function displayPosts(posts) {
-  var messagesDiv = document.getElementById('messages');
-  messagesDiv.innerHTML = '';
-  console.log(posts);
-  
-  posts.forEach(function(post) {
+    var messagesDiv = document.getElementById('messages');
+    messagesDiv.innerHTML = '';
+    console.log(posts);
+    
+    posts.forEach(function(post) {
     var dateAndTime = formatTime(post.timestamp);
     // Создайте HTML-код для отображения каждого поста и добавьте его в messagesDiv
     var postHTML = `    
@@ -526,12 +485,12 @@ function displayPosts(posts) {
             <img class="post-img" src="${post.url}" alt="">
             <span class="messageText">${post.messageText}</span>
             <div class="like-section">
-                <button class="like-button" onclick="handleLike(this)">&#x2764;</button>
-                <span class="like-counter"></span>
+                <button class="like-button${post.likes > 0 ? ' liked' : ''}" onclick="handleLike(this)">&#x2764;</button>
+                <span class="like-counter">${post.likes}</span>
             </div>
             <div class="post-bottom">
                 <span class="post-name">от: <b>${post.name}</b></span>
-                <span class="post-time">${post.timestamp}</span>
+                <span class="post-time">${dateAndTime}</span>
             </div>
 
             <div class="comments">              
@@ -559,7 +518,9 @@ function displayPosts(posts) {
         </div>
         `;
         messagesDiv.insertAdjacentHTML('afterbegin', postHTML);
-  });
+        var commentsDiv = document.getElementById(`comments-${post.id}`);
+        commentsDiv.style.display = 'none';
+    });
 }
 
 window.onload = function() {

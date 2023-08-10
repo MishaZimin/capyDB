@@ -14,7 +14,7 @@
   wss.on('connection', (ws) => {
     console.log('Установлено новое WebSocket соединение');
     ws.on('message', async (message) => {
-      console.log('Получено сообщение из WebSocket:', message);
+      // console.log('Получено сообщение из WebSocket:', message);
 
       // if (message === 'get_posts') { // Пример запроса на получение данных
         
@@ -46,17 +46,25 @@
     const messageData = msg;
     console.log('Получено сообщение из tg:', messageData);
     const messageDataString = JSON.stringify(messageData);
+    
     wss.clients.forEach((client) => {
-      client.send(messageDataString, (error) => {
-        if (error) {
-          console.error('Ошибка при отправке сообщения через WebSocket:', error);
-        }
-      });
+      client.send(messageDataString);
     });
   
-    saveDataToDatabase(messageData); // Вызов функции сохранения данных
+    
     bot.sendMessage(msg.chat.id, 'Получено');
+    saveDataToDatabase(messageData); // Вызов функции сохранения данных
   });
+
+  // bot.on('message', (msg) => {
+  //   const messageData = msg;
+  //   console.log('Получено сообщение:', messageData);
+  //   const messageDataString = JSON.stringify(messageData);
+  //   wss.clients.forEach((client) => {
+  //     client.send(messageDataString);
+  //   });
+  //   bot.sendMessage(msg.chat.id, 'Получено');
+  // });
 
 
 const uri = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/mydatabase';

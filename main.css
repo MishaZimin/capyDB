@@ -180,9 +180,9 @@ header #about > a:hover {
 
 #overview {
     float: left;
-    background-image: url('https://avatars.mds.yandex.net/i?id=79cd797f2be69d727ccc4be3d6bbbe61-5242289-images-thumbs&n=13');
+    /* background-image: url('https://avatars.mds.yandex.net/i?id=79cd797f2be69d727ccc4be3d6bbbe61-5242289-images-thumbs&n=13'); */
     background-blend-mode: multiply;
-    background-color: rgb(24, 24, 24);
+    background-color: rgb(15, 15, 15);
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
