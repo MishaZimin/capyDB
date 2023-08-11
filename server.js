@@ -10,13 +10,12 @@
 
   const { MongoClient } = require('mongodb');
   
-  
   wss.on('connection', (ws) => {
     console.log('Установлено новое WebSocket соединение');
     ws.on('message', async (message) => {
       // console.log('Получено сообщение из WebSocket:', message);
 
-      // if (message === 'get_posts') { // Пример запроса на получение данных
+      // if (message === 'get_posts') { // запрос на получение данных
         
       // }
       try {
@@ -50,50 +49,30 @@
     wss.clients.forEach((client) => {
       client.send(messageDataString);
     });
-  
     
     bot.sendMessage(msg.chat.id, 'Получено');
     saveDataToDatabase(messageData); // Вызов функции сохранения данных
   });
 
-  // bot.on('message', (msg) => {
-  //   const messageData = msg;
-  //   console.log('Получено сообщение:', messageData);
-  //   const messageDataString = JSON.stringify(messageData);
-  //   wss.clients.forEach((client) => {
-  //     client.send(messageDataString);
-  //   });
-  //   bot.sendMessage(msg.chat.id, 'Получено');
-  // });
+  const uri = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/mydatabase';
 
+  async function saveDataToDatabase(data) {
+    try {
+      const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      await client.connect();
 
-const uri = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/mydatabase';
+      const db = client.db('mydatabase');
 
-async function saveDataToDatabase(data) {
-  try {
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      const collection = db.collection('posts');  
+      await collection.insertOne(data);
 
-    // Подключение к базе данных
-    await client.connect();
-
-    // Выполнение операций с базой данных
-    const db = client.db('mydatabase');
-    const collection = db.collection('posts');
-    
-    await collection.insertOne(data);
-
-    // console.log('Сохранено сообщение из WebSocket:', collection);
-    // console.log('-----db:', db);
-    // console.log('-----data:', data);
-
-    // Закрытие соединения с базой данных
-    client.close();
-  } catch (error) {
-    console.error('Ошибка при сохранении данных в базу данных:', error);
+      client.close();
+    } catch (error) {
+      console.error('Ошибка при сохранении данных в базу данных:', error);
+    }
   }
-}
 
-module.exports = { saveDataToDatabase };
+  module.exports = { saveDataToDatabase };
 }
 
 
