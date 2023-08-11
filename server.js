@@ -24,13 +24,13 @@
         await client.connect();
         const db = client.db('mydatabase');
         const collection = db.collection('posts');
-        const posts = await collection.find({}).toArray();
+        const JSONposts = await collection.find({}).toArray();
 
-        console.log('------posts: ', posts);
+        console.log('------posts: ', JSONposts);
 
         client.close();
 
-        ws.send(JSON.stringify(posts)); // Отправляем данные клиенту
+        ws.send(JSON.stringify(JSONposts)); // Отправляем данные клиенту
       } catch (error) {
         console.error('Ошибка при получении данных из базы данных:', error);
       }
