@@ -4,11 +4,13 @@
   const TelegramBot = require('node-telegram-bot-api');
   const WebSocket = require('ws');
   const token = '6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo';
+  const { MongoClient } = require('mongodb');
+  const uri = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/mydatabase';
   
   const bot = new TelegramBot(token, { polling: true });
   const wss = new WebSocket.Server({ port: 8080 });
 
-  const { MongoClient } = require('mongodb');
+  
   
   wss.on('connection', (ws) => {
     console.log('Установлено новое WebSocket соединение');
@@ -54,7 +56,7 @@
     saveDataToDatabase(messageData); // Вызов функции сохранения данных
   });
 
-  const uri = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/mydatabase';
+  
 
   async function saveDataToDatabase(data) {
     try {
