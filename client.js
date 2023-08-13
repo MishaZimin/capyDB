@@ -409,7 +409,7 @@ $("#mess_send").click(function () {
 });
 
 // const ws = new WebSocket("ws://localhost:8080");
-const serverAddress = "wss://tough-glow-parrot.glitch.me//";
+const serverAddress = "wss://tough-glow-parrot.glitch.me/";
 // const serverAddress = "ws://localhost:8080";
 
 const ws = new WebSocket(serverAddress, {

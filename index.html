@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="main.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="main.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.socket.io/3.1.3/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script src="client.js" defer></script>
-</head>
-    <body>
-        <header>
-            <div id="logo" onclick="slowScroll('#top')">
-                logo
-            </div>
-            <div id="about">
-                <a class="info-head" href="#" title="Кто такие капибары" onclick="slowScroll('#main')">Инфо</a>
-                <a class="post-head" href="#" title="Посты" onclick="slowScroll('#overview')">Посты</a>
-                <a class="out-post-head" href="#" title="Предложка" onclick="slowScroll('#contacts')">Предложка</a>
+  </head>
+  <body>
+    <header>
+      <div id="logo" onclick="slowScroll('#top')">logo</div>
+      <div id="about">
+        <a
+          class="info-head"
+          href="#"
+          title="Кто такие капибары"
+          onclick="slowScroll('#main')"
+          >Инфо</a
+        >
+        <a
+          class="post-head"
+          href="#"
+          title="Посты"
+          onclick="slowScroll('#overview')"
+          >Посты</a
+        >
+        <a
+          class="out-post-head"
+          href="#"
+          title="Предложка"
+          onclick="slowScroll('#contacts')"
+          >Предложка</a
+        >
+      </div>
+    </header>
 
-            </div>
-        </header>
-
-        <!-- <div id="top">
+    <!-- <div id="top">
             <h1>Капибары</h1>
             <h3>сайт с капибарами</h3>
 
         </div> -->
 
-        <!-- <div id="main"> 
+    <!-- <div id="main"> 
             <div class="intro">
                 <h2>Капиба́ра</h2>
             </div>
@@ -42,8 +57,8 @@
             </div>
         </div> -->
 
-        <div id="main"> 
-            <!-- <div class="intro">
+    <div id="main">
+      <!-- <div class="intro">
                 <h2></h2>
             </div>
 
@@ -51,41 +66,57 @@
                 <span></span>
             
             </div> -->
-        </div>
+    </div>
 
-        <div id="overview">
-            <h2>Посты </h2>
-            <h4>(12 секунд грузятся из бд)</h4>
-            <!-- <div class="preloader">
+    <div id="overview">
+      <h2>Посты</h2>
+      <h4>(12 секунд грузятся из бд)</h4>
+      <!-- <div class="preloader">
                 <div class="preloader__row">
                   <div class="preloader__item"></div>
                   <div class="preloader__item"></div>
                 </div>
               </div> -->
-            <!-- <input type="text" id="searchInput" placeholder="Поиск...">
+      <!-- <input type="text" id="searchInput" placeholder="Поиск...">
             <div id="searchResults"></div> -->
 
-            <div id="posts-container"></div>
+      <div id="posts-container"></div>
 
-            <div id="messages"></div>
+      <div id="messages"></div>
+    </div>
 
-        
-        </div>
-        
-        <div id="contacts" class="contacts">
-            <center><h5>Предложка</h5></center>
-            <form id="form_input">
-                <label for="name">Имя <span>*</span></label><br>
-                <input type="text" placeholder="Введите имя" name="name" id="name"><br>
-                <label for="text">Url картинки <span>*</span></label><br>
-                <input type="text" placeholder="Введите url" name="url" id="url"><br>
-                <label for="messege">Текст поста <span>*</span></label><br>
-                <textarea placeholder="Введите сообщение" name="messege" id="messege"></textarea><br>
-                <div id="mess_send" class="btn"><span>Отправить</span></div>
-            </form>
-        </div>
-    </body>
-    <footer>
-        <code>.</code>
-    </footer>
+    <div id="contacts" class="contacts">
+      <center><h5>Предложка</h5></center>
+      <form id="form_input">
+        <label for="name">Имя <span>*</span></label
+        ><br />
+        <input
+          type="text"
+          placeholder="Введите имя"
+          name="name"
+          id="name"
+        /><br />
+        <label for="text">Url картинки <span>*</span></label
+        ><br />
+        <input
+          type="text"
+          placeholder="Введите url"
+          name="url"
+          id="url"
+        /><br />
+        <label for="messege">Текст поста <span>*</span></label
+        ><br />
+        <textarea
+          placeholder="Введите сообщение"
+          name="messege"
+          id="messege"
+        ></textarea
+        ><br />
+        <div id="mess_send" class="btn"><span>Отправить</span></div>
+      </form>
+    </div>
+  </body>
+  <footer>
+    <code>.</code>
+  </footer>
 </html>
