@@ -408,8 +408,8 @@ function getCommentCount(postId) {
 //   $("#messege").val("");
 // });
 
-// const ws = new WebSocket("ws://localhost:8080");
-const serverAddress = "wss://tough-glow-parrot.glitch.me/";
+//const serverAddress = "ws://localhost:8080";
+const serverAddress = "wss://bumpy-amusing-chasmosaurus.glitch.me/";
 // const serverAddress = "ws://localhost:8080";
 
 const ws = new WebSocket(serverAddress);
@@ -422,7 +422,13 @@ ws.onopen = function () {
 };
 
 ws.onmessage = function (event) {
-  const postsdb = JSON.parse(event.data);
+  console.log("event (ws.onmessage postsdb):", event);
+  console.log(
+    "event (ws.onmessage postsdb):",
+    event.data,
+    JSON.parse(event.data)
+  );
+  const postsdb = [JSON.parse(event.data), JSON.parse(event.data)];
 
   console.log("Получены данные из сервера (ws.onmessage postsdb):", postsdb);
   let posts = [];

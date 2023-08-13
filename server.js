@@ -20,20 +20,19 @@
 
       // }
       try {
-        const client = new MongoClient(uri, {
+        const client = await MongoClient.connect(uri, {
           useNewUrlParser: true,
           useUnifiedTopology: true,
         });
-        await client.connect();
         const db = client.db("mydatabase");
         const collection = db.collection("posts");
+        console.log("Получено сообщение collection:", collection);
         const JSONposts = await collection.find({}).toArray();
 
-        console.log("------posts: ", JSONposts);
+        //console.log("------posts: ", JSONposts);
 
+        //ws.send(JSONposts); // Отправляем данные клиенту
         client.close();
-
-        ws.send(JSON.stringify(JSONposts)); // Отправляем данные клиенту
       } catch (error) {
         console.error("Ошибка при получении данных из базы данных:", error);
       }
@@ -59,12 +58,10 @@
 
   async function saveDataToDatabase(data) {
     try {
-      const client = new MongoClient(uri, {
+      const client = await MongoClient.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
-      await client.connect();
-
       const db = client.db("mydatabase");
 
       const collection = db.collection("posts");
@@ -75,6 +72,4 @@
       console.error("Ошибка при сохранении данных в базу данных:", error);
     }
   }
-
-  module.exports = { saveDataToDatabase };
 }
