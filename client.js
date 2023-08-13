@@ -8,13 +8,13 @@ function slowScroll(id) {
   );
 }
 
-$(document).on("scroll", function () {
-  if ($(window).scrollTop() === 0) {
-    $("header").removeClass("fixed");
-  } else {
-    $("header").addClass("fixed");
-  }
-});
+// $(document).on("scroll", function () {
+//   if ($(window).scrollTop() === 0) {
+//     $("header").removeClass("fixed");
+//   } else {
+//     $("header").addClass("fixed");
+//   }
+// });
 
 function sendTelegramMessage(name, url, message) {
   var telegramBotToken = "6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo";
@@ -396,27 +396,23 @@ function getCommentCount(postId) {
   return comments.length;
 }
 
-$("#mess_send").click(function () {
-  var name = $("#name").val();
-  var url = $("#url").val();
-  var message = $("#messege").val();
+// $("#mess_send").click(function () {
+//   var name = $("#name").val();
+//   var url = $("#url").val();
+//   var message = $("#messege").val();
 
-  sendTelegramMessage(name, url, message);
+//   sendTelegramMessage(name, url, message);
 
-  $("#name").val("");
-  $("#url").val("");
-  $("#messege").val("");
-});
+//   $("#name").val("");
+//   $("#url").val("");
+//   $("#messege").val("");
+// });
 
 // const ws = new WebSocket("ws://localhost:8080");
 const serverAddress = "wss://tough-glow-parrot.glitch.me/";
 // const serverAddress = "ws://localhost:8080";
 
-const ws = new WebSocket(serverAddress, {
-  headers: {
-    "user-agent": "Google Chrome",
-  },
-});
+const ws = new WebSocket(serverAddress);
 
 // const ws = new WebSocket(serverAddress);
 

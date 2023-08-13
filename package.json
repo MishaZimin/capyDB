@@ -9,10 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
+    "body-parser": "^1.20.2",
     "mongodb": "^2.2.16",
-    "node-telegram-bot-api": "^0.0.1"
+    "node-telegram-bot-api": "^0.61.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
