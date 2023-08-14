@@ -16,6 +16,18 @@ $(document).on("scroll", function () {
   }
 });
 
+window.onload = function () {
+  let preloader = document.getElementById("preloader");
+  preloader.classList.add("hide-preloader");
+  setInterval(function () {
+    preloader.classList.add("preloader-hidden");
+  }, 990);
+};
+
+$(document).ready(function () {
+  $("#preloader").fadeOut(2000);
+});
+
 function sendTelegramMessage(name, url, message) {
   var telegramBotToken = "6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo";
   var telegramChatId = "997616670";
@@ -403,11 +415,19 @@ $("#mess_send").click(function () {
 
   url = url.trim();
 
+  if (name.length === 0) {
+    alert("заполни Имя");
+  }
+
   if (url.length < 10) {
-    if (url.slice(0, 5) != "https") {
+    if (url.slice(0, 8) != "https://") {
       alert("нужен url!");
       return;
     }
+  }
+
+  if (message.length === 0) {
+    alert("натыкай что-нибудь в тексте поста");
   }
 
   sendTelegramMessage(name, url, message);
@@ -453,13 +473,6 @@ ws.onmessage = function (event) {
         }
       }
 
-      // console.log(
-      //   "Получены данные name, url, messageText1:",
-      //   name,
-      //   url,
-      //   messageText
-      // );
-
       var post = {
         id: post.date,
         name: name,
@@ -484,7 +497,6 @@ ws.onmessage = function (event) {
 function loadPostsFromDB(posts) {
   var messagesDiv = document.getElementById("messages");
   messagesDiv.innerHTML = "";
-  console.log(posts);
 
   posts.forEach(function (post) {
     var dateAndTime = formatTime(post.timestamp);
@@ -546,11 +558,11 @@ function loadPostsFromDB(posts) {
 // }
 
 window.onload = function () {
-  // document.body.classList.add('loaded_hiding');
-  // window.setTimeout(function () {
-  //   document.body.classList.add('loaded');
-  //   document.body.classList.remove('loaded_hiding');
-  // }, 500);
+  document.body.classList.add("loaded_hiding");
+  window.setTimeout(function () {
+    document.body.classList.add("loaded");
+    document.body.classList.remove("loaded_hiding");
+  }, 500);
 };
 
 // const socket = new WebSocket('ws://localhost:8080');

@@ -28,7 +28,7 @@ html::-webkit-scrollbar-track {
 }
 
 body {
-  background-color: rgb(25, 25, 25);
+  background-color: rgb(15, 15, 15);
 }
 
 header {
@@ -177,7 +177,7 @@ header #about > a:hover {
 
 #overview {
   float: left;
-  /* background-image: url('https://avatars.mds.yandex.net/i?id=79cd797f2be69d727ccc4be3d6bbbe61-5242289-images-thumbs&n=13'); */
+  background-image: url("https://avatars.mds.yandex.net/i?id=79cd797f2be69d727ccc4be3d6bbbe61-5242289-images-thumbs&n=13");
   background-blend-mode: multiply;
   background-color: rgb(15, 15, 15);
   background-size: cover;
@@ -192,7 +192,7 @@ header #about > a:hover {
 
 #overview h2 {
   font-size: 3em;
-  padding: 10% 10% 0% 10%;
+  padding: 10% 10% 10% 10%;
   text-align: center;
 }
 
@@ -567,17 +567,47 @@ header #about > a:hover {
   transform: scale(1.1);
 }
 
-.preloader {
-  /*фиксированное позиционирование*/
+#preloader {
+  /* position: fixed; */
+  display: block;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 20%;
+  /* margin-left: 20%; */
+  margin: 0px auto 100px auto;
+
+  max-width: 400px;
+
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 100px;
+  background-color: rgba(15, 15, 15, 0) !important;
+}
+
+#preloader.hide-preloader {
+  animation: hidePreloader 10s;
+}
+
+#preloader.preloader-hidden {
+  display: none;
+}
+
+@keyframes hidePreloader {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* .preloader {
   position: fixed;
-  /* координаты положения */
   left: 0;
   top: 0;
   right: 0;
-  bottom: 0;
-  /* фоновый цвет элемента */
-  /* background: #e0e0e0; */
-  /* размещаем блок над всеми элементами на странице (это значение должно быть больше, чем у любого другого позиционированного элемента на странице) */
+  bottom: 1000;
   z-index: 1001;
 }
 
@@ -597,7 +627,7 @@ header #about > a:hover {
   position: absolute;
   display: inline-block;
   top: 0;
-  background-color: #3379b745;
+  background-color: #3379b7;
   border-radius: 100%;
   width: 35px;
   height: 35px;
@@ -634,7 +664,7 @@ header #about > a:hover {
 
 .loaded .preloader {
   display: none;
-}
+} */
 
 @media (min-width: 1401px) {
   #overview .post {
