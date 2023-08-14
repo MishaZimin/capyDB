@@ -399,14 +399,28 @@ $("#mess_send").click(function () {
   var url = $("#url").val();
   var message = $("#messege").val();
 
-  sendTelegramMessage(name, url, message);
+  console.log(name, url, message);
 
+  url = url.trim();
+
+  if (url.length < 10) {
+    if (url.slice(0, 5) != "https") {
+      alert("нужен url!");
+      return;
+    }
+  }
+
+  sendTelegramMessage(name, url, message);
+  console.log(name, "|", url.slice(0, 5), "|", message);
   $("#name").val("");
   $("#url").val("");
   $("#messege").val("");
 });
 
 const ws = new WebSocket("wss://mud-accessible-factory.glitch.me/");
+
+// const serverAddress = "ws://localhost:8080";
+// const ws = new WebSocket(serverAddress);
 
 ws.onopen = function () {
   console.log("WebSocket соединение установлено");
@@ -439,12 +453,12 @@ ws.onmessage = function (event) {
         }
       }
 
-      console.log(
-        "Получены данные name, url, messageText1:",
-        name,
-        url,
-        messageText
-      );
+      // console.log(
+      //   "Получены данные name, url, messageText1:",
+      //   name,
+      //   url,
+      //   messageText
+      // );
 
       var post = {
         id: post.date,
@@ -455,10 +469,9 @@ ws.onmessage = function (event) {
         timestamp: post.date,
       };
 
-      console.log("Получены данные post:", post);
       posts.push(post);
     });
-
+    console.log("Получены данные posts:", posts);
     loadPostsFromDB(posts);
   } catch (error) {
     console.error(
