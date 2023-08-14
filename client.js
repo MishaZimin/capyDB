@@ -406,7 +406,7 @@ $("#mess_send").click(function () {
   $("#messege").val("");
 });
 
-const ws = new WebSocket("ws://mud-accessible-factory.glitch.me/");
+const ws = new WebSocket("wss://mud-accessible-factory.glitch.me/");
 
 ws.onopen = function () {
   console.log("WebSocket соединение установлено");
