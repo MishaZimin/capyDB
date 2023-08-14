@@ -192,7 +192,8 @@ header #about > a:hover {
 
 #overview h2 {
   font-size: 3em;
-  padding: 10% 10% 10% 10%;
+  padding: 10% 10% 5% 10%;
+  max-height: 200px;
   text-align: center;
 }
 
@@ -586,7 +587,7 @@ header #about > a:hover {
 }
 
 #preloader.hide-preloader {
-  animation: hidePreloader 10s;
+  animation: hidePreloader 2s;
 }
 
 #preloader.preloader-hidden {

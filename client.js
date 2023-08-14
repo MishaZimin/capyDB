@@ -21,11 +21,11 @@ window.onload = function () {
   preloader.classList.add("hide-preloader");
   setInterval(function () {
     preloader.classList.add("preloader-hidden");
-  }, 990);
+  }, 1000);
 };
 
 $(document).ready(function () {
-  $("#preloader").fadeOut(2000);
+  $("#preloader").fadeOut(1000);
 });
 
 function sendTelegramMessage(name, url, message) {
