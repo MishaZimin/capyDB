@@ -8,13 +8,13 @@ function slowScroll(id) {
   );
 }
 
-// $(document).on("scroll", function () {
-//   if ($(window).scrollTop() === 0) {
-//     $("header").removeClass("fixed");
-//   } else {
-//     $("header").addClass("fixed");
-//   }
-// });
+$(document).on("scroll", function () {
+  if ($(window).scrollTop() === 0) {
+    $("header").removeClass("fixed");
+  } else {
+    $("header").addClass("fixed");
+  }
+});
 
 function sendTelegramMessage(name, url, message) {
   var telegramBotToken = "6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo";
@@ -133,52 +133,50 @@ function loadPostsFromLocalStorage() {
     var comments = getCommentsFromLocalStorage(post.id);
 
     var postHTML = `    
-        <div class="post" id="${post.id}">
-            <img class="post-img" src="${post.url}" alt="">
-            <span class="messageText">${post.messageText}</span>
-            <div class="like-section">
-                <button class="like-button${
-                  post.likes > 0 ? " liked" : ""
-                }" onclick="handleLike(this)">&#x2764;</button>
-                <span class="like-counter">${post.likes}</span>
-            </div>
-            <div class="post-bottom">
-                <span class="post-name">от: <b>${post.name}</b></span>
-                <span class="post-time">${dateAndTime}</span>
-            </div>
+      <div class="post" id="${post.id}">
+          <img class="post-img" src="${post.url}" alt="">
+          <span class="messageText">${post.messageText}</span>
+          <div class="like-section">
+              <button class="like-button${
+                post.likes > 0 ? " liked" : ""
+              }" onclick="handleLike(this)">&#x2764;</button>
+              <span class="like-counter">${post.likes}</span>
+          </div>
+          <div class="post-bottom">
+              <span class="post-name">от: <b>${post.name}</b></span>
+              <span class="post-time">${dateAndTime}</span>
+          </div>
 
-            <div class="comments">              
-                <button class="collapse-button" onclick="toggleComments(${
-                  post.id
-                })">
-                    <b>Комментарии</b>  ${comments.length} 
-                </button>
-                <div class="comment-list" id="comments-${post.id}">
-                    <div class="comment-container">
-                        <!-- здесь будут комментарии -->
-                    </div>
-                    <div class="add-comment">
-                        <input type="text-comment" id="comment-input-${
-                          post.id
-                        }" placeholder="комментарий">
-                        
-                        <button onclick="clearComments(${
-                          post.id
-                        })">             
-                            &#10006;              
-                        </button>
+          <div class="comments">              
+              <button class="collapse-button" onclick="toggleComments(${
+                post.id
+              })">
+                  <b>Комментарии</b>  ${comments.length} 
+              </button>
+              <div class="comment-list" id="comments-${post.id}">
+                  <div class="comment-container">
+                      <!-- здесь будут комментарии -->
+                  </div>
+                  <div class="add-comment">
+                      <input type="text-comment" id="comment-input-${
+                        post.id
+                      }" placeholder="комментарий">
+                      
+                      <button onclick="clearComments(${post.id})">             
+                          &#10006;              
+                      </button>
 
-                        <button onclick="addComment(${
-                          post.id
-                        })">                      
-                            &#10095; 
-                        </button>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        `;
+                      <button onclick="addComment(${
+                        post.id
+                      })">                      
+                          &#10095; 
+                      </button>
+                  </div>
+              </div>
+              
+          </div>
+      </div>
+      `;
 
     messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
     var commentsDiv = document.getElementById(`comments-${post.id}`);
@@ -354,37 +352,37 @@ function loadCommentsFromLocalStorage(postId) {
 
   comments.forEach(function (comment) {
     var commentHTML = `
-            <div class="comment" id="comment-${comment.id}">
-                <div class="avatar">
-                    <img src="${comment.avatar}" alt="Avatar">
-                </div>
-                <span class="comment-text">
-                    <p class="comment-name">${comment.name}</p>
-                    ${comment.text}
-                </span>
-                <span class="comment-right">
-                    <p class="comment-time">
-                        ${formatTime(comment.timestamp)}
-                    </p>
-                </span>
-            </div>
-        `;
+          <div class="comment" id="comment-${comment.id}">
+              <div class="avatar">
+                  <img src="${comment.avatar}" alt="Avatar">
+              </div>
+              <span class="comment-text">
+                  <p class="comment-name">${comment.name}</p>
+                  ${comment.text}
+              </span>
+              <span class="comment-right">
+                  <p class="comment-time">
+                      ${formatTime(comment.timestamp)}
+                  </p>
+              </span>
+          </div>
+      `;
     commentsDiv.insertAdjacentHTML("beforeend", commentHTML);
   });
 
   var addCommentHTML = `
-        <div class="add-comment" id="comment-${postId}">
-            <input type="text-comment" id="comment-input-${postId}" placeholder="комментарий">
-            
-            <button onclick="clearComments(${postId})">             
-                &#10006;              
-            </button>
+      <div class="add-comment" id="comment-${postId}">
+          <input type="text-comment" id="comment-input-${postId}" placeholder="комментарий">
+          
+          <button onclick="clearComments(${postId})">             
+              &#10006;              
+          </button>
 
-            <button onclick="addComment(${postId})">                      
-                &#10095; 
-            </button>
-        </div>
-    `;
+          <button onclick="addComment(${postId})">                      
+              &#10095; 
+          </button>
+      </div>
+  `;
 
   commentsDiv.insertAdjacentHTML("afterbegin", addCommentHTML);
 
@@ -396,39 +394,27 @@ function getCommentCount(postId) {
   return comments.length;
 }
 
-// $("#mess_send").click(function () {
-//   var name = $("#name").val();
-//   var url = $("#url").val();
-//   var message = $("#messege").val();
+$("#mess_send").click(function () {
+  var name = $("#name").val();
+  var url = $("#url").val();
+  var message = $("#messege").val();
 
-//   sendTelegramMessage(name, url, message);
+  sendTelegramMessage(name, url, message);
 
-//   $("#name").val("");
-//   $("#url").val("");
-//   $("#messege").val("");
-// });
+  $("#name").val("");
+  $("#url").val("");
+  $("#messege").val("");
+});
 
-//const serverAddress = "ws://localhost:8080";
-const serverAddress = "wss://bumpy-amusing-chasmosaurus.glitch.me/";
-// const serverAddress = "ws://localhost:8080";
-
-const ws = new WebSocket(serverAddress);
-
-// const ws = new WebSocket(serverAddress);
+const ws = new WebSocket("ws://mud-accessible-factory.glitch.me/");
 
 ws.onopen = function () {
   console.log("WebSocket соединение установлено");
-  //ws.send("get_posts"); // Отправляем запрос на получение постов
+  ws.send("get_posts"); // Отправляем запрос на получение постов
 };
 
 ws.onmessage = function (event) {
-  console.log("event (ws.onmessage postsdb):", event);
-  console.log(
-    "event (ws.onmessage postsdb):",
-    event.data,
-    JSON.parse(event.data)
-  );
-  const postsdb = [JSON.parse(event.data), JSON.parse(event.data)];
+  const postsdb = JSON.parse(event.data);
 
   console.log("Получены данные из сервера (ws.onmessage postsdb):", postsdb);
   let posts = [];
@@ -491,52 +477,50 @@ function loadPostsFromDB(posts) {
     var dateAndTime = formatTime(post.timestamp);
     // Создайте HTML-код для отображения каждого поста и добавьте его в messagesDiv
     var postHTML = `    
-        <div class="post" id="${post.id}">
-            <img class="post-img" src="${post.url}" alt="">
-            <span class="messageText">${post.messageText}</span>
-            <div class="like-section">
-                <button class="like-button${
-                  post.likes > 0 ? " liked" : ""
-                }" onclick="handleLike(this)">&#x2764;</button>
-                <span class="like-counter">${post.likes}</span>
-            </div>
-            <div class="post-bottom">
-                <span class="post-name">от: <b>${post.name}</b></span>
-                <span class="post-time">${dateAndTime}</span>
-            </div>
+      <div class="post" id="${post.id}">
+          <img class="post-img" src="${post.url}" alt="">
+          <span class="messageText">${post.messageText}</span>
+          <div class="like-section">
+              <button class="like-button${
+                post.likes > 0 ? " liked" : ""
+              }" onclick="handleLike(this)">&#x2764;</button>
+              <span class="like-counter">${post.likes}</span>
+          </div>
+          <div class="post-bottom">
+              <span class="post-name">от: <b>${post.name}</b></span>
+              <span class="post-time">${dateAndTime}</span>
+          </div>
 
-            <div class="comments">              
-                <button class="collapse-button" onclick="toggleComments(${
-                  post.id
-                })">
-                    <b>Комментарии</b>
-                </button>
-                <div class="comment-list" id="comments-${post.id}">
-                    <div class="comment-container">
-                        <!-- здесь будут комментарии -->
-                    </div>
-                    <div class="add-comment">
-                        <input type="text-comment" id="comment-input-${
-                          post.id
-                        }" placeholder="комментарий">
-                        
-                        <button onclick="clearComments(${
-                          post.id
-                        })">             
-                            &#10006;              
-                        </button>
+          <div class="comments">              
+              <button class="collapse-button" onclick="toggleComments(${
+                post.id
+              })">
+                  <b>Комментарии</b>
+              </button>
+              <div class="comment-list" id="comments-${post.id}">
+                  <div class="comment-container">
+                      <!-- здесь будут комментарии -->
+                  </div>
+                  <div class="add-comment">
+                      <input type="text-comment" id="comment-input-${
+                        post.id
+                      }" placeholder="комментарий">
+                      
+                      <button onclick="clearComments(${post.id})">             
+                          &#10006;              
+                      </button>
 
-                        <button onclick="addComment(${
-                          post.id
-                        })">                      
-                            &#10095; 
-                        </button>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        `;
+                      <button onclick="addComment(${
+                        post.id
+                      })">                      
+                          &#10095; 
+                      </button>
+                  </div>
+              </div>
+              
+          </div>
+      </div>
+      `;
     messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
     var commentsDiv = document.getElementById(`comments-${post.id}`);
     commentsDiv.style.display = "none";

@@ -13,30 +13,36 @@
 
   wss.on("connection", (ws) => {
     console.log("Установлено новое WebSocket соединение");
-    ws.on("message", async (message) => {
-      // console.log('Получено сообщение из WebSocket:', message);
+    try {
+      ws.on("message", async (message) => {
+        // console.log('Получено сообщение из WebSocket:', message);
 
-      // if (message === 'get_posts') { // запрос на получение данных
+        // if (message === 'get_posts') { // запрос на получение данных
 
-      // }
-      try {
-        const client = await MongoClient.connect(uri, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        });
-        const db = client.db("mydatabase");
-        const collection = db.collection("posts");
-        console.log("Получено сообщение collection:", collection);
-        const JSONposts = await collection.find({}).toArray();
+        // }
+        try {
+          const client = new MongoClient(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          });
+          await client.connect();
 
-        //console.log("------posts: ", JSONposts);
+          const db = client.db("mydatabase");
 
-        //ws.send(JSONposts); // Отправляем данные клиенту
-        client.close();
-      } catch (error) {
-        console.error("Ошибка при получении данных из базы данных:", error);
-      }
-    });
+          const collection = db.collection("posts");
+
+          //const coll = client.db("mydatabase").collection("posts");
+          //console.log("------posts: ", JSONposts);
+
+          ws.send(collection); // Отправляем данные клиенту
+          await client.close();
+        } catch (error) {
+          console.error("Ошибка при получении данных из базы данных:", error);
+        }
+      });
+    } catch (error) {
+      console.error("Ошибка!");
+    }
   });
 
   wss.on("error", (error) => {
@@ -58,10 +64,12 @@
 
   async function saveDataToDatabase(data) {
     try {
-      const client = await MongoClient.connect(uri, {
+      const client = new MongoClient(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
+      await client.connect();
+
       const db = client.db("mydatabase");
 
       const collection = db.collection("posts");
@@ -72,4 +80,6 @@
       console.error("Ошибка при сохранении данных в базу данных:", error);
     }
   }
+
+  module.exports = { saveDataToDatabase };
 }

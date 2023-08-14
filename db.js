@@ -2,9 +2,7 @@
 
 // const mongoUrl = 'mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/'; // Замените на свою строку подключения
 
-
 //mongodb+srv://mishaDataBase:ptNJzhp7QlM5xBiH@cluster0.0frsvu2.mongodb.net/
-
 
 // async function connectToDatabase() {
 //   const client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -26,9 +24,6 @@
 // module.exports = {
 //   saveDataToDatabase,
 // };
-
-
-
 
 // const { MongoClient } = require('mongodb');
 
