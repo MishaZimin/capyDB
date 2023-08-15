@@ -499,6 +499,7 @@ function loadPostsFromDB(posts) {
   messagesDiv.innerHTML = "";
 
   var loader = document.getElementById("loader");
+
   loader.style.display = "block"; // Показать лоадер
 
   posts.forEach(function (post) {
