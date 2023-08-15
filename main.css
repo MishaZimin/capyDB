@@ -179,7 +179,7 @@ header #about > a:hover {
   float: left;
   background-image: url("https://avatars.mds.yandex.net/i?id=79cd797f2be69d727ccc4be3d6bbbe61-5242289-images-thumbs&n=13");
   background-blend-mode: multiply;
-  background-color: rgb(15, 15, 15);
+  background-color: rgb(15, 15, 15) !important;
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
@@ -204,7 +204,7 @@ header #about > a:hover {
   text-align: center;
 }
 
-#overview img {
+#overview #messages img {
   background: rgb(35, 35, 35);
   float: left;
   width: 100%;
@@ -568,7 +568,7 @@ header #about > a:hover {
   transform: scale(1.1);
 }
 
-#preloader {
+#loader {
   /* position: fixed; */
   display: block;
   top: 0;
@@ -579,18 +579,29 @@ header #about > a:hover {
   margin: 0px auto 100px auto;
 
   max-width: 400px;
-
+  border-radius: 20px;
   align-items: center;
   justify-content: center;
   margin-bottom: 100px;
-  background-color: rgba(15, 15, 15, 0) !important;
+  /* background-color: rgb(66, 66, 66); */
 }
 
-#preloader.hide-preloader {
-  animation: hidePreloader 2s;
+#loader h6 {
+  padding: 2% 10% 0% 10%;
+  color: rgb(82, 82, 82);
+  font-size: 1.4em;
+  text-align: center;
 }
 
-#preloader.preloader-hidden {
+#loader img {
+  margin-left: 55px;
+}
+
+/* #preloader.hide-preloader {
+  animation: hidePreloader 0s;
+} */
+
+/* #preloader.preloader-hidden {
   display: none;
 }
 
@@ -599,9 +610,9 @@ header #about > a:hover {
     opacity: 1;
   }
   100% {
-    opacity: 0;
+    opacity: 1;
   }
-}
+} */
 
 /* .preloader {
   position: fixed;

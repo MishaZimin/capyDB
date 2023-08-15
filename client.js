@@ -16,17 +16,17 @@ $(document).on("scroll", function () {
   }
 });
 
-window.onload = function () {
-  let preloader = document.getElementById("preloader");
-  preloader.classList.add("hide-preloader");
-  setInterval(function () {
-    preloader.classList.add("preloader-hidden");
-  }, 1000);
-};
+// window.onload = function () {
+//   let preloader = document.getElementById("preloader");
+//   preloader.classList.add("hide-preloader");
+//   // setInterval(function () {
+//   //   preloader.classList.add("preloader-hidden");
+//   // }, 0);
+// };
 
-$(document).ready(function () {
-  $("#preloader").fadeOut(1000);
-});
+// $(document).ready(function () {
+//   $("#preloader").fadeOut(1000);
+// });
 
 function sendTelegramMessage(name, url, message) {
   var telegramBotToken = "6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo";
@@ -498,6 +498,9 @@ function loadPostsFromDB(posts) {
   var messagesDiv = document.getElementById("messages");
   messagesDiv.innerHTML = "";
 
+  var loader = document.getElementById("loader");
+  loader.style.display = "block"; // Показать лоадер
+
   posts.forEach(function (post) {
     var dateAndTime = formatTime(post.timestamp);
     // Создайте HTML-код для отображения каждого поста и добавьте его в messagesDiv
@@ -550,6 +553,8 @@ function loadPostsFromDB(posts) {
     var commentsDiv = document.getElementById(`comments-${post.id}`);
     commentsDiv.style.display = "none";
   });
+
+  loader.style.display = "none";
 }
 
 // window.onload = function() {
