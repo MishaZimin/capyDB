@@ -179,7 +179,7 @@ header #about > a:hover {
   float: left;
   background-image: url("https://avatars.mds.yandex.net/i?id=79cd797f2be69d727ccc4be3d6bbbe61-5242289-images-thumbs&n=13");
   background-blend-mode: multiply;
-  background-color: rgb(15, 15, 15) !important;
+  background-color: rgb(25, 25, 25) !important;
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
@@ -573,7 +573,7 @@ header #about > a:hover {
   display: block;
   top: 0;
   left: 0;
-  width: 60%;
+  width: 40%;
   height: 20%;
   /* margin-left: 20%; */
   margin: 0px auto 100px auto;
@@ -594,7 +594,8 @@ header #about > a:hover {
 }
 
 #loader img {
-  margin-left: 55px;
+  width: 90%;
+  margin-left: -10%;
 }
 
 /* #preloader.hide-preloader {
@@ -814,6 +815,11 @@ header #about > a:hover {
   #overview span {
     font-size: 1.2em;
   }
+
+  /* #loader img {
+    margin-left: -25% !important;
+    background-color: rgb(134, 52, 52);
+  } */
 
   .avatar {
     aspect-ratio: 7.205/6;
