@@ -53,10 +53,11 @@ function sendTelegramMessage(name, url, message) {
 
 function handleLike(button, postId) {
   if (button.classList.contains("liked")) {
-    ws.send(JSON.stringify({ action: "like", postId: postId, type: "remove" }));
+    ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
   } else {
     ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
   }
+  //location.reload();
 }
 
 function savePostToLocalStorage(name, url, messageText, timestamp) {
@@ -73,16 +74,6 @@ function savePostToLocalStorage(name, url, messageText, timestamp) {
 
   posts.push(post);
   savePostsToLocalStorage(posts);
-}
-
-function updateLikeCount(postId, count) {
-  var posts = getPostsFromLocalStorage();
-  var postToUpdate = findPostById(posts, postId);
-
-  if (postToUpdate) {
-    postToUpdate.likes = count;
-    savePostsToLocalStorage(posts);
-  }
 }
 
 function findPostById(posts, postId) {
@@ -112,15 +103,6 @@ function scrollToBottom(postId) {
   commentsDiv.scrollTop = commentsDiv.scrollHeight;
 }
 
-function clearComments(postId) {
-  // var commentsDiv = document.getElementById(`comments-${postId}`);
-  // commentsDiv.innerHTML = "";
-  // // saveCommentsToLocalStorage(postId, []);
-  // // //loadPostsFromLocalStorage(postId)
-  // // loadCommentsFromLocalStorage(postId);
-  // commentsDiv.style.display = "none";
-}
-
 function toggleComments(postId) {
   var commentsDiv = document.getElementById(`comments-${postId}`);
   var commentContainer = document.getElementById(`comment-container-${postId}`);
@@ -131,12 +113,9 @@ function toggleComments(postId) {
     commentsDiv.appendChild(commentContainer);
   }
 
-  if (
-    commentsDiv.style.display === "none" ||
-    commentsDiv.style.display === ""
-  ) {
-    commentContainer.innerHTML = "";
-    loadCommentsFromLocalStorage(postId, commentContainer);
+  if (commentsDiv.style.display === "none") {
+    commentsDiv.style.display = "block";
+    // Здесь добавьте функциональность, которая должна выполняться всегда при нажатии
   } else {
     commentsDiv.style.display = "none";
   }
@@ -206,7 +185,7 @@ function addComment(postId) {
   var randomIndex = Math.floor(Math.random() * avatarUrls.length);
   var randomAvatarUrl = avatarUrls[randomIndex];
 
-  var comments = getCommentsFromLocalStorage(postId);
+  var comments = getCommentsFromDB(postId);
   var commentId = Date.now().toString();
   var commentName = "@capybara";
 
@@ -221,11 +200,10 @@ function addComment(postId) {
 
   comments.push(comment);
   ws.send(JSON.stringify({ action: "add_comment", postId, comment }));
-  saveCommentsToLocalStorage(postId, comments);
-
+  //location.reload();
   commentInput.value = "";
-  loadPostsFromLocalStorage(postId);
-  loadCommentsFromLocalStorage(postId);
+  //loadPostsFromLocalStorage(postId);
+  //loadCommentsFromDB(postId);
 }
 
 function getAvatarImage(avatarUrl) {
@@ -253,42 +231,41 @@ function clearLocalStorage() {
   localStorage.removeItem("likedPosts");
 }
 
-function getCommentsFromLocalStorage(postId) {
+function getCommentsFromDB(postId) {
   var commentsKey = `comments_${postId}`;
   return JSON.parse(localStorage.getItem(commentsKey)) || [];
 }
 
-function saveCommentsToLocalStorage(postId, comments) {
-  var commentsKey = `comments_${postId}`;
-  localStorage.setItem(commentsKey, JSON.stringify(comments));
-}
-
-function loadCommentsFromLocalStorage(postId) {
-  var comments = getCommentsFromLocalStorage(postId);
+function loadCommentsFromDB(comments) {
+  //var comments = getCommentsFromDB(postId);
+  //ws.send(JSON.stringify({ action: "load_comment"}));
   var commentsDiv = document.getElementById(`comments-${postId}`);
   var addCommentDiv = document.querySelector(
     `#comments-${postId} .add-comment`
   );
 
+  // Отправить запрос на сервер через WebSocket
+  //ws.send(JSON.stringify({ action: "get_comments", postId }));
+
   commentsDiv.innerHTML = "";
 
   comments.forEach(function (comment) {
     var commentHTML = `
-          <div class="comment" id="comment-${comment.id}">
-              <div class="avatar">
-                  <img src="${comment.avatar}" alt="Avatar">
+              <div class="comment" id="comment-${comment.id}">
+                  <div class="avatar">
+                      <img src="${comment.avatar}" alt="Avatar">
+                  </div>
+                  <span class="comment-text">
+                      <p class="comment-name">${comment.name}</p>
+                      ${comment.text}
+                  </span>
+                  <span class="comment-right">
+                      <p class="comment-time">
+                          ${formatTime(comment.timestamp)}
+                      </p>
+                  </span>
               </div>
-              <span class="comment-text">
-                  <p class="comment-name">${comment.name}</p>
-                  ${comment.text}
-              </span>
-              <span class="comment-right">
-                  <p class="comment-time">
-                      ${formatTime(comment.timestamp)}
-                  </p>
-              </span>
-          </div>
-      `;
+          `;
     commentsDiv.insertAdjacentHTML("beforeend", commentHTML);
   });
 
@@ -308,11 +285,11 @@ function loadCommentsFromLocalStorage(postId) {
 
   commentsDiv.insertAdjacentHTML("afterbegin", addCommentHTML);
 
-  commentsDiv.style.display = "block";
+  //commentsDiv.style.display = "block";
 }
 
 function getCommentCount(postId) {
-  var comments = getCommentsFromLocalStorage(postId);
+  var comments = getCommentsFromDB(postId);
   return comments.length;
 }
 
@@ -399,7 +376,7 @@ function loadPostsFromDB(posts) {
           </div>
 
           <div class="comments">              
-              <button class="collapse-button" onclick="toggleComments(${
+              <button class="collapse-button active" onclick="toggleComments(${
                 post.id
               })">
                   <b>Комментарии</b>
@@ -428,9 +405,36 @@ function loadPostsFromDB(posts) {
           </div>
       </div>
       `;
+
     messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+
     var commentsDiv = document.getElementById(`comments-${post.id}`);
-    commentsDiv.style.display = "none";
+    var commentContainer = commentsDiv.querySelector(".comment-container");
+
+    post.comments.forEach(function (comment) {
+      var commentHTML = `
+                  <div class="comment" id="comment-${comment.id}">
+                      <div class="avatar">
+                          <img src="${comment.avatar}" alt="Avatar">
+                      </div>
+                      <span class="comment-text">
+                          <p class="comment-name">${comment.name}</p>
+                          ${comment.text}
+                      </span>
+                      <span class="comment-right">
+                          <p class="comment-time">
+                              ${formatTime(comment.timestamp)}
+                          </p>
+                      </span>
+                  </div>
+              `;
+      // commentsDiv
+      //   .querySelector(".comment-container")
+      //   .insertAdjacentHTML("beforeend", commentHTML);
+      //console.log("comment: ", commentHTML);
+      commentContainer.insertAdjacentHTML("beforeend", commentHTML);
+    });
+    //commentsDiv.style.display = "none";
   });
 
   loader.style.display = "none";
@@ -612,7 +616,7 @@ window.onload = function () {
 
 //   posts.forEach(function (post) {
 //     var dateAndTime = formatTime(post.timestamp);
-//     var comments = getCommentsFromLocalStorage(post.id);
+//     var comments = getCommentsFromDB(post.id);
 
 //     var postHTML = `
 //       <div class="post" id="${post.id}">
@@ -663,7 +667,7 @@ window.onload = function () {
 //     messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
 //     var commentsDiv = document.getElementById(`comments-${post.id}`);
 //     commentsDiv.style.display = "none";
-//     //loadCommentsFromLocalStorage(post.id); // Загружаем комментарии для данного поста
+//     //loadCommentsFromDB(post.id); // Загружаем комментарии для данного поста
 //   });
 // }
 
@@ -678,7 +682,7 @@ window.onload = function () {
 
 //   // saveCommentsToLocalStorage(postId, []);
 //   // //loadPostsFromLocalStorage(postId)
-//   // loadCommentsFromLocalStorage(postId);
+//   // loadCommentsFromDB(postId);
 //   commentsDiv.style.display = "none";
 // }
 
@@ -697,7 +701,7 @@ window.onload = function () {
 //     commentsDiv.style.display === ""
 //   ) {
 //     commentContainer.innerHTML = "";
-//     loadCommentsFromLocalStorage(postId, commentContainer);
+//     loadCommentsFromDB(postId, commentContainer);
 //   } else {
 //     commentsDiv.style.display = "none";
 //   }
@@ -767,7 +771,7 @@ window.onload = function () {
 //   var randomIndex = Math.floor(Math.random() * avatarUrls.length);
 //   var randomAvatarUrl = avatarUrls[randomIndex];
 
-//   var comments = getCommentsFromLocalStorage(postId);
+//   var comments = getCommentsFromDB(postId);
 //   var commentId = Date.now().toString();
 //   var commentName = "@capybara";
 
@@ -786,7 +790,7 @@ window.onload = function () {
 
 //   commentInput.value = "";
 //   loadPostsFromLocalStorage(postId);
-//   loadCommentsFromLocalStorage(postId);
+//   loadCommentsFromDB(postId);
 // }
 
 // function getAvatarImage(avatarUrl) {
@@ -814,7 +818,7 @@ window.onload = function () {
 //   localStorage.removeItem("likedPosts");
 // }
 
-// function getCommentsFromLocalStorage(postId) {
+// function getCommentsFromDB(postId) {
 //   var commentsKey = `comments_${postId}`;
 //   return JSON.parse(localStorage.getItem(commentsKey)) || [];
 // }
@@ -824,8 +828,8 @@ window.onload = function () {
 //   localStorage.setItem(commentsKey, JSON.stringify(comments));
 // }
 
-// function loadCommentsFromLocalStorage(postId) {
-//   var comments = getCommentsFromLocalStorage(postId);
+// function loadCommentsFromDB(postId) {
+//   var comments = getCommentsFromDB(postId);
 //   var commentsDiv = document.getElementById(`comments-${postId}`);
 //   var addCommentDiv = document.querySelector(
 //     `#comments-${postId} .add-comment`
@@ -873,7 +877,7 @@ window.onload = function () {
 // }
 
 // function getCommentCount(postId) {
-//   var comments = getCommentsFromLocalStorage(postId);
+//   var comments = getCommentsFromDB(postId);
 //   return comments.length;
 // }
 
