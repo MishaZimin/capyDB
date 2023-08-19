@@ -12,10 +12,11 @@
 
   wss.on("connection", (ws) => {
     console.log("Установлено новое WebSocket соединение");
+
     ws.on("message", async (message) => {
       //console.log("Получено сообщение из WebSocket:", message.toString());
       //const data = JSON.parse(message);
-      console.log("----data:", JSON.parse(message));
+      console.log("ws.send:", JSON.parse(message));
       try {
         const data = JSON.parse(message);
         // Пример запроса на получение данных
@@ -48,16 +49,14 @@
 
             // Обновите пост в базе данных
             await collection.updateOne({ id: data.postId }, { $set: post });
-
             const posts = await collection.find({}).toArray();
             ws.send(JSON.stringify(posts));
-
-            console.log("Комментарий добавлен к посту:", post);
+            //console.log("Комментарий добавлен к посту:", post);
           }
 
           client.close();
         } else if (data.action === "like") {
-          console.log("like station", data.type);
+          console.log("like station: ", data.type);
 
           const post = await collection.findOne({ id: data.postId });
 
@@ -69,14 +68,11 @@
           } else if (data.type === "remove") {
             // Уменьшаем количество лайков, если оно больше 0
             if (post.likes > 0) {
-              post.likes -= 1;
+              //post.likes -= 1;
             }
           }
 
           await collection.updateOne({ id: data.postId }, { $set: post });
-
-          const posts = await collection.find({}).toArray();
-          ws.send(JSON.stringify(posts));
 
           client.close();
         } else {
@@ -84,7 +80,7 @@
         }
 
         // wss.clients.forEach((client) => {
-        //   client.send(updatedPostData);
+        //   client.send(posts);
         // });
       } catch (error) {
         console.error("Ошибка при получении данных из базы данных:", error);
