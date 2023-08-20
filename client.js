@@ -208,7 +208,7 @@ $("#mess_send").click(function () {
     alert("натыкай что-нибудь в тексте поста");
   }
 
-  // sendTelegramMessage(name, url, message);
+  sendTelegramMessage(name, url, message);
   // console.log(name, "|", url.slice(0, 5), "|", message);
 
   $("#name").val("");
@@ -279,7 +279,7 @@ function loadPostsFromDB(posts) {
               <div class="add-comment" id="add-comment-${post.id}">
                   <input type="text-comment" id="comment-input-${
                     post.id
-                  }" placeholder="комментарий">
+                  }" placeholder="Комментарий">
                   
                   <button onclick="addComment(${
                     post.id
