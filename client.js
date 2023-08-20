@@ -42,10 +42,13 @@ function sendTelegramMessage(name, url, message) {
 function handleLike(button, postId) {
   if (button.classList.contains("liked")) {
     ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
+    var likeCounter = button.nextElementSibling;
+    var currentLikes = parseInt(likeCounter.textContent);
+    likeCounter.textContent = currentLikes + 1;
   } else {
     ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
   }
-  location.reload();
+  // location.reload();
 }
 
 function scrollToBottom(postId) {
@@ -78,7 +81,7 @@ function toggleComments(postId) {
 }
 
 function isCommentValid(comment) {
-  var banWords = ["бля", "хуй", "сук", "еба", "ебу", "пизд"];
+  var banWords = ["fuck"];
 
   for (var i = 0; i < banWords.length; i++) {
     if (comment.indexOf(banWords[i]) !== -1) {
@@ -94,17 +97,17 @@ function addComment(postId) {
   var commentText = commentInput.value.trim();
 
   if (!commentText) {
-    alert("введите коммент");
+    alert("Введите комментарий");
     return;
   }
 
   if (!isCommentValid(commentText)) {
-    alert("пошел нахуй уебан");
+    alert("Комментарий содержит недопустимые слова");
     return;
   }
 
   if (commentText.length > 200) {
-    alert("коммент слишком длинный, максимальная длина - 200 символов");
+    alert("Комментарий слишком длинный, максимальная длина - 200 символов");
     return;
   }
 
@@ -197,6 +200,7 @@ $("#mess_send").click(function () {
 
   if (name.length === 0) {
     alert("напиши имя");
+    return;
   }
   if (url.length < 10) {
     if (url.slice(0, 8) != "https://") {
@@ -206,6 +210,7 @@ $("#mess_send").click(function () {
   }
   if (message.length === 0) {
     alert("натыкай что-нибудь в тексте поста");
+    return;
   }
 
   sendTelegramMessage(name, url, message);
@@ -286,12 +291,7 @@ function loadPostsFromDB(posts) {
                   })">                      
                       &#10095; 
                   </button>
-
-                  <button onclick="clearComments(${post.id})">             
-                      &#10006;              
-                  </button>
-
-                  
+             
               </div>
           </div>
       </div>
@@ -321,7 +321,7 @@ function loadPostsFromDB(posts) {
                   </div>
               `;
 
-      commentContainer.insertAdjacentHTML("beforeend", commentHTML);
+      commentContainer.insertAdjacentHTML("afterbegin", commentHTML);
     });
 
     commentsDiv.style.display = "none";
