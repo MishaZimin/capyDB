@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&display=swap");
 
 * {
   margin: 0;
@@ -228,7 +228,7 @@ header #about > a:hover {
 #overview .post {
   width: 40%;
   margin-bottom: 5%;
-  background-color: rgb(35, 35, 35);
+  background-color: rgb(40, 40, 40);
   border-radius: 15px;
 
   box-shadow: 0px 0px 20px rgba(46, 46, 46, 0.3);
@@ -269,12 +269,14 @@ header #about > a:hover {
   width: 14%;
   min-width: 65px;
   max-width: 70px;
-  max-height: 30px;
+  max-height: 35px;
   display: flex;
   align-items: center;
   background-color: rgb(25, 25, 25);
   border-radius: 20px;
-  font-size: 0.8em;
+  font-size: 0.7em;
+
+  box-shadow: inset 2px 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .like-counter {
@@ -286,7 +288,7 @@ header #about > a:hover {
   background: none;
   border: none;
   color: rgb(255, 255, 255);
-  font-size: 19px;
+  font-size: 15px;
   cursor: pointer;
   margin-left: 15%;
   padding-bottom: 1%;
@@ -297,22 +299,12 @@ header #about > a:hover {
   color: red;
 }
 
-/* .like-button:hover {
-  color: red;
-  transform: scale(1.2);
-} */
-
 .like-button.liked {
   color: red;
 }
 
-/* .add-comment {
-  display: none;
-} */
-
 .comments {
-  /* padding: 1% 2% 1.5% 2%; */
-  padding: 2% 2% 2% 2%;
+  padding: 2%;
   border-radius: 10px;
 }
 
@@ -390,8 +382,8 @@ header #about > a:hover {
 
 .collapse-button {
   text-align: left;
-  background-color: rgb(35, 35, 35);
-  border: 1px solid rgb(35, 35, 35);
+  background-color: rgb(40, 40, 40);
+  border: 1px solid rgb(40, 40, 40);
 
   color: rgb(180, 180, 180);
   font-size: 0.9em;
@@ -433,7 +425,7 @@ header #about > a:hover {
 
 .add-comment input {
   text-align: left;
-  width: 89%;
+  width: 84%;
   height: 100%;
   padding: 2%;
   border-radius: 10px;
@@ -456,7 +448,7 @@ header #about > a:hover {
   margin-left: 1%;
   background-color: rgb(30, 30, 30);
   cursor: pointer;
-  width: 10%;
+  width: 15%;
 
   font-size: 1em;
 
@@ -464,7 +456,7 @@ header #about > a:hover {
   text-align: center;
 
   /* box-shadow: inset 1px 1px 5px rgba(20, 20, 20, 0.3); */
-  box-shadow: 2px 2px 10px rgba(20, 20, 20, 0.3);
+  /* box-shadow: 2px 2px 10px rgba(20, 20, 20, 0.3); */
 }
 
 .add-comment button:hover {
@@ -499,14 +491,6 @@ header #about > a:hover {
   /* background-color: rgb(40, 40, 40); */
   transform: scale(1.01);
 }
-
-/* .comment-container {
-  max-height: 300px !important;
-} */
-
-/* .comment-block {
-  margin-top: 1%;
-} */
 
 #contacts {
   float: left;
@@ -608,7 +592,7 @@ header #about > a:hover {
   display: inline-block;
   padding: 12px 0px;
   font-size: 17px;
-  font-weight: bold;
+  /* font-weight: bold; */
   color: rgb(200, 200, 200);
 
   background: transparent;
@@ -845,7 +829,7 @@ header #about > a:hover {
   }
 
   .comment-container {
-    max-height: 350px !important;
+    max-height: 300px !important;
   }
 
   .comment-block {

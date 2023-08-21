@@ -41,12 +41,14 @@ function sendTelegramMessage(name, url, message) {
 
 function handleLike(button, postId) {
   if (button.classList.contains("liked")) {
-    ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
     var likeCounter = button.nextElementSibling;
     var currentLikes = parseInt(likeCounter.textContent);
     likeCounter.textContent = currentLikes + 1;
-  } else {
+
     ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
+
+    // } else {
+    //   ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
   }
   // location.reload();
 }
