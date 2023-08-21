@@ -38,15 +38,44 @@
           onclick="slowScroll('#contacts')"
           >Предложка</a
         >
+        
       </div>
     </header>
 
+    <div id="main">
+      <div id="contacts" class="contacts">
+        <center><h5>Вход</h5></center>
+        <form id="form_input">
+          <!-- <label for="name">Имя <span>*</span></label
+          ><br /> -->
+          <input
+            type="text"
+            placeholder="Введите имя пользователя"
+            name="username-sign-in"
+            id="username-sign-in"
+          /><br />
+          <!-- <label for="text">Url картинки <span>*</span></label
+          ><br /> -->
+          <input
+            type="text"
+            placeholder="Введите пароль"
+            name="password-sign-in"
+            id="password-sign-in"
+          /><br />
+          <div id="sign_in" class="btn"><span>Войти</span></div>
+        </form>
+      </div>
+  
+    </div>
+
+    
     <div id="overview">
       <h2></h2>
-      <!-- <h2>Посты</h2> -->
+      <h2>Посты</h2>
 
       <div id="loader">
         <span><h6>загрузка...</h6></span>
+        <span><h6>возможно вы не вошли в аккаунт</h6></span>
         <br />
         <img
           src="https://media.tenor.com/xcowhQupDnkAAAAj/capybara-capybara-meme.gif"
@@ -89,6 +118,39 @@
         <div id="mess_send" class="btn"><span>Отправить</span></div>
       </form>
     </div>
+
+    <div id="contacts" class="contacts">
+      <center><h5>Регистрация</h5></center>
+      <form id="form_input">
+        <!-- <label for="name">Имя <span>*</span></label
+        ><br /> -->
+        <input
+          type="text"
+          placeholder="Введите имя пользователя"
+          name="username"
+          id="username"
+        /><br />
+        <!-- <label for="text">Url картинки <span>*</span></label
+        ><br /> -->
+        <input
+          type="text"
+          placeholder="Введите пароль"
+          name="password"
+          id="password"
+        /><br />
+        <!-- <label for="messege">Текст поста <span>*</span></label
+        ><br /> -->
+        <input
+          placeholder="Введите почту"
+          name="mail"
+          id="mail"
+        ></input
+        ><br />
+        <div id="reg" class="btn"><span>Зарегистрироваться</span></div>
+      </form>
+    </div>
+
+    
   </body>
   <footer>
     <code>.</code>

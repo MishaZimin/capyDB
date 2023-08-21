@@ -1,4 +1,9 @@
 // client.js
+//const ws = new WebSocket("wss://mud-accessible-factory.glitch.me/");
+
+const serverAddress = "ws://localhost:3000";
+const ws = new WebSocket(serverAddress);
+
 function slowScroll(id) {
   $("html, body").animate(
     {
@@ -40,7 +45,7 @@ function sendTelegramMessage(name, url, message) {
 }
 
 function handleLike(button, postId) {
-  if (button.classList.contains("liked")) {
+  if (true) {
     var likeCounter = button.nextElementSibling;
     var currentLikes = parseInt(likeCounter.textContent);
     likeCounter.textContent = currentLikes + 1;
@@ -223,26 +228,90 @@ $("#mess_send").click(function () {
   $("#messege").val("");
 });
 
-const ws = new WebSocket("wss://mud-accessible-factory.glitch.me/");
+$("#reg").click(function () {
+  var username = $("#username").val();
+  var password = $("#password").val();
+  var mail = $("#mail").val();
 
-//! const serverAddress = "ws://localhost:3000";
-//! const ws = new WebSocket(serverAddress);
+  //console.log(username, password, mail);
+
+  password = password.trim();
+
+  if (username.length === 0) {
+    alert("напиши имя reg");
+    return;
+  }
+  if (mail.length === 0) {
+    alert("натыкай что-нибудь в тексте поста");
+    return;
+  }
+
+  // Создайте объект данных для отправки на сервер
+  var userData = {
+    username: username,
+    password: password,
+    mail: mail,
+  };
+
+  ws.send(JSON.stringify({ action: "registration", userData }));
+
+  //sendTelegramMessage(username, password, mail);
+  // console.log(username, "|", password.slice(0, 5), "|", mail);
+
+  $("#username").val("");
+  $("#password").val("");
+  $("#mail").val("");
+});
+
+$("#sign_in").click(function () {
+  var username = $("#username-sign-in").val();
+  var password = $("#password-sign-in").val();
+
+  //console.log(username, password, mail);
+
+  password = password.trim();
+
+  if (username.length === 0) {
+    alert("напиши имя");
+    return;
+  }
+
+  // Создайте объект данных для отправки на сервер
+  var signIn = {
+    username: username,
+    password: password,
+  };
+
+  ws.send(JSON.stringify({ action: "sign_in", signIn }));
+
+  //sendTelegramMessage(username, password, mail);
+  // console.log(username, "|", password.slice(0, 5), "|", mail);
+
+  $("#username-sign-in").val("");
+  $("#password-sign-in").val("");
+});
 
 ws.onopen = function () {
   console.log("WebSocket соединение установлено");
-  ws.send(JSON.stringify({ action: "get_posts" })); // Отправляем запрос на получение постов
+  // Отправляем запрос на получение постов
 };
 
 ws.onmessage = function (event) {
-  const postsdb = JSON.parse(event.data);
+  console.log(event.data[0]);
 
-  //console.log("Получены данные из сервера (ws.onmessage postsdb):", postsdb);
+  if (event.data[0] === "[") {
+    const postsdb = JSON.parse(event.data);
 
-  try {
-    console.log("Получены данные из базы данных:", postsdb);
-    loadPostsFromDB(postsdb);
-  } catch (error) {
-    console.error("Ошибка при получении данных из базы данных:", error);
+    //console.log("Получены данные из сервера (ws.onmessage postsdb):", postsdb);
+
+    try {
+      console.log("Получены данные из базы данных:", postsdb);
+      loadPostsFromDB(postsdb);
+    } catch (error) {
+      console.error("Ошибка при получении данных из базы данных:", error);
+    }
+  } else if (event.data[0] === "y") {
+    ws.send(JSON.stringify({ action: "get_posts" }));
   }
 };
 
