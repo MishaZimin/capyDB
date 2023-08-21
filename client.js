@@ -238,11 +238,11 @@ $("#reg").click(function () {
   password = password.trim();
 
   if (username.length === 0) {
-    alert("напиши имя reg");
+    alert("напиши имя");
     return;
   }
   if (mail.length === 0) {
-    alert("натыкай что-нибудь в тексте поста");
+    alert("нужна почта");
     return;
   }
 
@@ -297,7 +297,7 @@ ws.onopen = function () {
 };
 
 ws.onmessage = function (event) {
-  console.log(event.data[0]);
+  console.log(event.data);
 
   if (event.data[0] === "[") {
     const postsdb = JSON.parse(event.data);
