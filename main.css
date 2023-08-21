@@ -829,10 +829,14 @@ header #about > a:hover {
   }
 
   .comment-container {
-    max-height: 300px !important;
+    max-height: 350px !important;
   }
 
   .comment-block {
+    margin-top: 1%;
+  }
+
+  .add-comment {
     margin-top: 1%;
   }
 
