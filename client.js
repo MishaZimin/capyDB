@@ -310,8 +310,14 @@ ws.onmessage = function (event) {
     } catch (error) {
       console.error("Ошибка при получении данных из базы данных:", error);
     }
-  } else if (event.data[0] === "y") {
+  } else if (event.data === "successful_login") {
     ws.send(JSON.stringify({ action: "get_posts" }));
+  } else if (event.data === "password_incorrect") {
+    alert("неверный пароль");
+    return;
+  } else if (event.data === "login_incorrect") {
+    alert("пользователя с таким именем нет");
+    return;
   }
 };
 
