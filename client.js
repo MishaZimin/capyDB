@@ -1,8 +1,8 @@
 // client.js
-//const ws = new WebSocket("wss://mud-accessible-factory.glitch.me/");
+const ws = new WebSocket("wss://mud-accessible-factory.glitch.me/");
 
-const serverAddress = "ws://localhost:3000";
-const ws = new WebSocket(serverAddress);
+// const serverAddress = "ws://localhost:3000";
+// const ws = new WebSocket(serverAddress);
 
 function slowScroll(id) {
   $("html, body").animate(
