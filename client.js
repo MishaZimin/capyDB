@@ -138,10 +138,10 @@ function addComment(postId) {
 
   var comment = {
     id: commentId,
-    name: getUsernameLS(),
+    name: getLS("username"),
     likes: 0,
     text: commentText,
-    avatar: randomAvatarUrl,
+    avatar: getLS("url"),
     timestamp: Math.floor(Date.now() / 1000),
   };
 
@@ -203,22 +203,32 @@ $("#mess_send").click(function () {
   $("#messege").val("");
 });
 
-$("#reg").click(function () {
+$("#registration").click(function () {
   var username = $("#username").val();
   var password = $("#password").val();
   var mail = $("#mail").val();
+  var url = $("#url").val();
 
   //console.log(username, password, mail);
 
   password = password.trim();
+  url = url.trim();
+  mail = mail.trim();
 
   if (username.length === 0) {
     alert("напиши имя");
     return;
   }
-  if (mail.length === 0) {
-    alert("нужна почта");
+  if (password.length === 0) {
+    alert("нужен пароль");
     return;
+  }
+
+  if (url.length < 10) {
+    if (url.slice(0, 8) != "https://") {
+      alert("нужен url!");
+      return;
+    }
   }
 
   // Создайте объект данных для отправки на сервер
@@ -226,6 +236,7 @@ $("#reg").click(function () {
     username: username,
     password: password,
     mail: mail,
+    url: url,
   };
 
   ws.send(JSON.stringify({ action: "registration", userData }));
@@ -236,6 +247,7 @@ $("#reg").click(function () {
   $("#username").val("");
   $("#password").val("");
   $("#mail").val("");
+  $("#url").val("");
 });
 
 $("#sign_in").click(function () {
@@ -272,6 +284,10 @@ $("#exit").click(function () {
   // console.log(loggedIn, username);
   localStorage.setItem("loggedIn", "false");
   localStorage.setItem("username", "none");
+  localStorage.setItem(
+    "url",
+    "https://avatars.mds.yandex.net/i?id=cde779dc1051c473acd14df966bc038f9a42fccf-8076535-images-thumbs&n=13"
+  );
   // console.log(loggedIn, username);
 
   location.reload();
@@ -288,6 +304,7 @@ ws.onopen = function () {
 
   console.log(localStorage.getItem("loggedIn"));
   console.log(localStorage.getItem("username"));
+  console.log(localStorage.getItem("url"));
 
   // if (loggedIn === "true" && username) {
   //   // Если пользователь успешно вошел, установите имя пользователя где-то на странице
@@ -300,7 +317,7 @@ ws.onopen = function () {
   // }
 
   if (checkLocalStorage()) {
-    document.getElementById("user-profile").textContent = getUsernameLS();
+    document.getElementById("user-profile").textContent = getLS("username");
     ws.send(JSON.stringify({ action: "get_posts" }));
   }
   // Отправляем запрос на получение постов
@@ -330,10 +347,12 @@ ws.onmessage = function (event) {
     if (data.action === "successful_login") {
       localStorage.setItem("loggedIn", "true");
       localStorage.setItem("username", data.username);
+      localStorage.setItem("url", data.url);
 
       var loggedIn = localStorage.getItem("loggedIn");
       var username = localStorage.getItem("username");
-      console.log(loggedIn, username);
+      var url = localStorage.getItem("url");
+      console.log(loggedIn, username, url);
       location.reload();
       ws.send(JSON.stringify({ action: "get_posts" }));
     } else if (data.action === "password_incorrect") {
@@ -450,16 +469,17 @@ function checkLocalStorage() {
   // Проверьте, вошел ли пользователь, используя информацию из localStorage
   var loggedIn = localStorage.getItem("loggedIn");
   var username = localStorage.getItem("username");
+  var url = localStorage.getItem("url");
 
-  console.log(localStorage.getItem("loggedIn"));
-  console.log(localStorage.getItem("username"));
+  // console.log(localStorage.getItem("loggedIn"));
+  // console.log(localStorage.getItem("username"));
+  // console.log(localStorage.getItem("url"));
 
-  return loggedIn === "true" && username;
+  return loggedIn === "true" && username && url;
 }
 
-function getUsernameLS() {
-  var username = localStorage.getItem("username");
-  return username;
+function getLS(object) {
+  return localStorage.getItem(object);
 }
 
 function getAvatarUrl() {
