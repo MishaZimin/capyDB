@@ -285,11 +285,9 @@ ws.onopen = function () {
   // // isWebSocketOpen = true;
 
   // // Проверьте, вошел ли пользователь, используя информацию из localStorage
-  // var loggedIn = localStorage.getItem("loggedIn");
-  // var username = localStorage.getItem("username");
 
-  // console.log(localStorage.getItem("loggedIn"));
-  // console.log(localStorage.getItem("username"));
+  console.log(localStorage.getItem("loggedIn"));
+  console.log(localStorage.getItem("username"));
 
   // if (loggedIn === "true" && username) {
   //   // Если пользователь успешно вошел, установите имя пользователя где-то на странице
