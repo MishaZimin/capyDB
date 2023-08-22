@@ -317,9 +317,18 @@ ws.onopen = function () {
   // }
 
   if (checkLocalStorage()) {
+    loadPostPlace();
     document.getElementById("user-profile").textContent = getLS("username");
+    loadExitForm();
+    loadSendPostForm();
+    loadRegPostFormNone();
+    loadSignInNone();
     ws.send(JSON.stringify({ action: "get_posts" }));
+  } else {
+    loadSignInForm();
+    loadRegPostForm();
   }
+
   // Отправляем запрос на получение постов
 };
 
@@ -354,6 +363,7 @@ ws.onmessage = function (event) {
       var url = localStorage.getItem("url");
       console.log(loggedIn, username, url);
       location.reload();
+
       ws.send(JSON.stringify({ action: "get_posts" }));
     } else if (data.action === "password_incorrect") {
       alert("неверный пароль");
@@ -364,6 +374,290 @@ ws.onmessage = function (event) {
     }
   }
 };
+
+function loadSignInForm() {
+  var messagesDiv = document.getElementById("sign-in-form-place");
+  messagesDiv.innerHTML = "";
+
+  var postHTML = `
+  <div id="sign-in-form" class="sign-in-form">
+    <center><h5>Вход</h5></center>
+    <form id="form_input">
+      <!-- <label for="name">Имя <span>*</span></label
+      ><br /> -->
+      <input
+        type="text"
+        placeholder="Введите имя пользователя"
+        name="username-sign-in"
+        id="username-sign-in"
+      /><br />
+      <!-- <label for="text">Url картинки <span>*</span></label
+      ><br /> -->
+      <input
+        type="text"
+        placeholder="Введите пароль"
+        name="password-sign-in"
+        id="password-sign-in"
+      /><br />
+      <div id="sign_in" class="btn" onclick="loadButtonSignInForm()"><span>Войти</span></div>
+    </form>
+  </div>
+  `;
+
+  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+}
+
+function loadSignInNone() {
+  var messagesDiv = document.getElementById("sign-in-form-place");
+  messagesDiv.innerHTML = "";
+
+  var postHTML = ``;
+
+  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+}
+
+function loadButtonSignInForm() {
+  var username = $("#username-sign-in").val();
+  var password = $("#password-sign-in").val();
+
+  password = password.trim();
+
+  if (username.length === 0) {
+    alert("напиши имя");
+    return;
+  }
+
+  // Создайте объект данных для отправки на сервер
+  var signIn = {
+    username: username,
+    password: password,
+  };
+
+  ws.send(JSON.stringify({ action: "sign_in", signIn }));
+
+  //sendTelegramMessage(username, password, mail);
+  // console.log(username, "|", password.slice(0, 5), "|", mail);
+
+  $("#username-sign-in").val("");
+  $("#password-sign-in").val("");
+}
+
+function loadPostPlace() {
+  var messagesDiv = document.getElementById("post-form-place");
+  messagesDiv.innerHTML = "";
+
+  var postHTML = `
+  <div id="main">
+    <div class="user-profile">
+      Аккаунт: <b><span id="user-profile"></span></b>
+    </div>
+  </div>
+
+  <div id="overview">
+    <h2></h2>
+    <h2>Посты</h2>
+
+    <div id="loader">
+      <span><h6>загрузка...</h6></span>
+      <span><h6>возможно вы не вошли в аккаунт</h6></span>
+      <br />
+      <img
+        src="https://media.tenor.com/xcowhQupDnkAAAAj/capybara-capybara-meme.gif"
+        alt="loader"
+      />
+    </div>
+
+    <!-- <div id="posts-container"></div> -->
+
+    <div id="messages"></div>
+  </div>
+  `;
+
+  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+}
+
+function loadExitForm() {
+  var messagesDiv = document.getElementById("exit-form-place");
+  messagesDiv.innerHTML = "";
+
+  var postHTML = `
+  <div id="exit-form" class="exit-form">
+    <center><h5>Выход</h5></center>
+    <form id="form_input">
+
+      <div id="exit" class="btn" onclick="loadButtonExitForm()"><span>Выйти</span></div>
+    </form>
+  </div>
+  `;
+
+  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+}
+
+function loadButtonExitForm() {
+  localStorage.setItem("loggedIn", "false");
+  localStorage.setItem("username", "none");
+  localStorage.setItem(
+    "url",
+    "https://avatars.mds.yandex.net/i?id=cde779dc1051c473acd14df966bc038f9a42fccf-8076535-images-thumbs&n=13"
+  );
+
+  location.reload();
+}
+
+function loadSendPostForm() {
+  var messagesDiv = document.getElementById("send-post-form-place");
+  messagesDiv.innerHTML = "";
+
+  var postHTML = `
+  <div id="send-post-form" class="send-post-form">
+    <center><h5>Предложка</h5></center>
+    <form id="form_input">
+      <input
+        type="text"
+        placeholder="Введите url картинки"
+        name="urlPost"
+        id="urlPost"
+      /><br />
+      <input
+        placeholder="Введите текст поста"
+        name="messege"
+        id="messege"
+      ></input
+      ><br />
+      <div id="mess_send" class="btn" onclick="loadButtonSendPost()"><span>Отправить</span></div>
+    </form>
+  </div>
+  `;
+
+  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+}
+
+function loadButtonSendPost() {
+  var url = $("#urlPost").val();
+  var message = $("#messege").val();
+
+  //console.log(name, url, message);
+
+  url = url.trim();
+  if (url.length < 10) {
+    if (url.slice(0, 8) != "https://") {
+      alert("нужен url! qqqq");
+      return;
+    }
+  }
+  if (message.length === 0) {
+    alert("натыкай что-нибудь в тексте поста");
+    return;
+  }
+
+  sendTelegramMessage(getLS("username"), url, message);
+  // console.log(name, "|", url.slice(0, 5), "|", message);
+
+  $("#urlPost").val("");
+  $("#messege").val("");
+}
+
+function loadRegPostForm() {
+  var messagesDiv = document.getElementById("reg-form-place");
+  messagesDiv.innerHTML = "";
+
+  var postHTML = `
+  <div id="reg-form" class="reg-form">
+    <center><h5>Регистрация</h5></center>
+    <form id="form_input">
+      <!-- <label for="name">Имя <span>*</span></label
+      ><br /> -->
+      <input
+        type="text"
+        placeholder="Введите имя пользователя"
+        name="username"
+        id="username"
+      /><br />
+      <!-- <label for="text">Url картинки <span>*</span></label
+      ><br /> -->
+      <input
+        type="text"
+        placeholder="Введите пароль"
+        name="password"
+        id="password"
+      /><br />
+      <!-- <label for="messege">Текст поста <span>*</span></label
+      ><br /> -->
+      <input
+        placeholder="Введите почту"
+        name="mail"
+        id="mail"
+      ></input
+      ><br />
+      <input
+        placeholder="Введите url аватарки"
+        name="urlAvatar"
+        id="urlAvatar"
+      ></input
+      ><br />
+      <div id="registration" class="btn" onclick="loadButtonRegSendPost()"><span>Зарегистрироваться</span></div>
+    </form>
+  </div>
+  `;
+
+  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+}
+
+function loadRegPostFormNone() {
+  var messagesDiv = document.getElementById("reg-form-place");
+  messagesDiv.innerHTML = "";
+
+  var postHTML = ``;
+
+  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+}
+
+function loadButtonRegSendPost() {
+  var username = $("#username").val();
+  var password = $("#password").val();
+  var mail = $("#mail").val();
+  var url = $("#urlAvatar").val();
+
+  //console.log(username, password, mail);
+
+  password = password.trim();
+  url = url.trim();
+  mail = mail.trim();
+
+  if (username.length === 0) {
+    alert("напиши имя");
+    return;
+  }
+  if (password.length === 0) {
+    alert("нужен пароль");
+    return;
+  }
+
+  if (url.length < 10) {
+    if (url.slice(0, 8) != "https://") {
+      alert("нужен url!");
+      return;
+    }
+  }
+
+  // Создайте объект данных для отправки на сервер
+  var userData = {
+    username: username,
+    password: password,
+    mail: mail,
+    url: url,
+  };
+
+  ws.send(JSON.stringify({ action: "registration", userData }));
+
+  //sendTelegramMessage(username, password, mail);
+  // console.log(username, "|", password.slice(0, 5), "|", mail);
+
+  $("#username").val("");
+  $("#password").val("");
+  $("#mail").val("");
+  $("#urlAvatar").val("");
+}
 
 function loadPostsFromDB(posts) {
   var messagesDiv = document.getElementById("messages");
