@@ -876,7 +876,7 @@ header #about > a:hover {
     margin-top: 1%;
   }
 
-  #main,
+  #sign-in-form,
   #exit-form,
   #send-post-form,
   #reg-form {
@@ -918,5 +918,6 @@ header #about > a:hover {
 
 footer {
   color: rgb(25, 25, 25);
+  background-color: rgb(25, 25, 25);
   margin-bottom: 0;
 }
