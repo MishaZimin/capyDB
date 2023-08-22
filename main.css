@@ -151,21 +151,20 @@ header #about > a:hover {
 
 #main {
   float: center;
-  padding: 10%;
+  padding: 10% 10% 5% 10%;
   width: 100%;
 }
 
 #main .intro {
   background-color: rgb(35, 35, 35);
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  border-radius: 10px;
   padding: 5% 5% 0% 5%;
 }
 
-#main .text {
+#main .user-profile {
   background-color: rgb(35, 35, 35);
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
+  border-radius: 10px;
+
   padding: 4%;
 }
 
@@ -174,9 +173,14 @@ header #about > a:hover {
   font-size: 2.5em;
 }
 
-#main .text span {
+#main .user-profile span {
   color: rgb(150, 150, 150);
-  font-size: 2em;
+  font-size: 1em;
+}
+
+.user-profile {
+  background-color: #999;
+  color: white;
 }
 
 #overview {
@@ -697,6 +701,10 @@ header #about > a:hover {
     font-size: 1.3em;
   }
 
+  #main {
+    padding: 5% 10% 5% 10%;
+  }
+
   .post-time {
     font-size: 1.2em;
     width: 20%;
@@ -797,6 +805,10 @@ header #about > a:hover {
     font-size: 1.5em;
     padding-top: 50%;
     height: 1000px;
+  }
+
+  #main {
+    padding: 15% 5% 5% 5%;
   }
 
   #main .intro h2 {

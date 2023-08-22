@@ -138,7 +138,7 @@ function addComment(postId) {
 
   var comment = {
     id: commentId,
-    name: commentName + commentId,
+    name: getUsernameLS(),
     likes: 0,
     text: commentText,
     avatar: randomAvatarUrl,
@@ -148,31 +148,6 @@ function addComment(postId) {
   ws.send(JSON.stringify({ action: "add_comment", postId, comment }));
 
   commentInput.value = "";
-}
-
-function getAvatarUrl() {
-  var avatarUrls = [
-    "https://avatars.mds.yandex.net/i?id=cde779dc1051c473acd14df966bc038f9a42fccf-8076535-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=e59519547ca3227798a2638fe587cbb80951a970-9181363-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=c3774dd0d3b48ce898170876d05252adb2f92b33-8901029-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=263c28e8d8eceea70895c904f880e212b64928c2-8294270-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=78d4ed45fafe9f6cedb2934f0fcc938cd1d52a20-9050759-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=22efaaa843cb7bb474908ebac7158661425bca3e-9065974-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=8d20c0d271e9053a2ca62b412c4a8dc56cc6515f-5246350-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=446edff486f12589defc380337cedb73969b09d3-9589172-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=4048803598b8161035afd54a2222509fa398a7c9-8427413-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=edae7179de7094050a8f791949a7c6856aadc8e7-9699538-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=766f85e0244cca60524f0d952422acee862b383f-8564741-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=444d3714437929a22d186b8a702e1967cc7b6e70-9101109-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=c8bc077579879db179364499f6bef2bd398176aa-9182438-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=08013bbb6ae10bcd9d96d61e307922cbf78da35e-9148257-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=c390dedd62eb9bbf23b7159c3992134781ba5a32-4810024-images-thumbs&ref=rim&n=33&w=176&h=206",
-    "https://avatars.mds.yandex.net/i?id=6cb0327bc51493453930f62b3c641c5434060ef0-8438571-images-thumbs&ref=rim&n=33&w=164&h=206",
-    "https://avatars.mds.yandex.net/i?id=ac76d928c8d906448464f6951514df21475653e7-9152516-images-thumbs&n=13",
-    "https://avatars.mds.yandex.net/i?id=8eac33c1cabd16c1dd54fc848187149f41372189-9700546-images-thumbs&n=13",
-  ];
-
-  return avatarUrls;
 }
 
 function formatTime(timestamp) {
@@ -267,8 +242,6 @@ $("#sign_in").click(function () {
   var username = $("#username-sign-in").val();
   var password = $("#password-sign-in").val();
 
-  //console.log(username, password, mail);
-
   password = password.trim();
 
   if (username.length === 0) {
@@ -289,15 +262,57 @@ $("#sign_in").click(function () {
 
   $("#username-sign-in").val("");
   $("#password-sign-in").val("");
+
+  // location.reload();
 });
+
+$("#exit").click(function () {
+  // var loggedIn = localStorage.getItem("loggedIn");
+  // var username = localStorage.getItem("username");
+  // console.log(loggedIn, username);
+  localStorage.setItem("loggedIn", "false");
+  localStorage.setItem("username", "none");
+  // console.log(loggedIn, username);
+
+  location.reload();
+  // console.log("успешный выход из аккаунта");
+});
+
+// let isWebSocketOpen = false;
 
 ws.onopen = function () {
   console.log("WebSocket соединение установлено");
+  // // isWebSocketOpen = true;
+
+  // // Проверьте, вошел ли пользователь, используя информацию из localStorage
+  // var loggedIn = localStorage.getItem("loggedIn");
+  // var username = localStorage.getItem("username");
+
+  // console.log(localStorage.getItem("loggedIn"));
+  // console.log(localStorage.getItem("username"));
+
+  // if (loggedIn === "true" && username) {
+  //   // Если пользователь успешно вошел, установите имя пользователя где-то на странице
+  //   // Например, в каком-то элементе с id "user-profile"
+
+  //   document.getElementById("user-profile").textContent = username;
+  //   ws.send(JSON.stringify({ action: "get_posts" }));
+
+  //   //location.reload();
+  // }
+
+  if (checkLocalStorage()) {
+    document.getElementById("user-profile").textContent = getUsernameLS();
+    ws.send(JSON.stringify({ action: "get_posts" }));
+  }
   // Отправляем запрос на получение постов
 };
 
 ws.onmessage = function (event) {
-  console.log(event.data);
+  // if (!isWebSocketOpen) {
+  //   // Если соединение не установлено, игнорируем сообщения
+  //   return;
+  // }
 
   if (event.data[0] === "[") {
     const postsdb = JSON.parse(event.data);
@@ -310,14 +325,26 @@ ws.onmessage = function (event) {
     } catch (error) {
       console.error("Ошибка при получении данных из базы данных:", error);
     }
-  } else if (event.data === "successful_login") {
-    ws.send(JSON.stringify({ action: "get_posts" }));
-  } else if (event.data === "password_incorrect") {
-    alert("неверный пароль");
-    return;
-  } else if (event.data === "login_incorrect") {
-    alert("пользователя с таким именем нет");
-    return;
+  } else {
+    console.log(event.data);
+
+    const data = JSON.parse(event.data);
+    if (data.action === "successful_login") {
+      localStorage.setItem("loggedIn", "true");
+      localStorage.setItem("username", data.username);
+
+      var loggedIn = localStorage.getItem("loggedIn");
+      var username = localStorage.getItem("username");
+      console.log(loggedIn, username);
+      location.reload();
+      ws.send(JSON.stringify({ action: "get_posts" }));
+    } else if (data.action === "password_incorrect") {
+      alert("неверный пароль");
+      return;
+    } else if (data.action === "login_incorrect") {
+      alert("пользователя с таким именем нет");
+      return;
+    }
   }
 };
 
@@ -414,4 +441,50 @@ window.onload = function () {
     document.body.classList.add("loaded");
     document.body.classList.remove("loaded_hiding");
   }, 500);
+
+  // if (!isWebSocketOpen) {
+  //   // Если соединение не установлено, игнорируем сообщения
+  //   return;
+  // }
 };
+
+function checkLocalStorage() {
+  // Проверьте, вошел ли пользователь, используя информацию из localStorage
+  var loggedIn = localStorage.getItem("loggedIn");
+  var username = localStorage.getItem("username");
+
+  console.log(localStorage.getItem("loggedIn"));
+  console.log(localStorage.getItem("username"));
+
+  return loggedIn === "true" && username;
+}
+
+function getUsernameLS() {
+  var username = localStorage.getItem("username");
+  return username;
+}
+
+function getAvatarUrl() {
+  var avatarUrls = [
+    "https://avatars.mds.yandex.net/i?id=cde779dc1051c473acd14df966bc038f9a42fccf-8076535-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=e59519547ca3227798a2638fe587cbb80951a970-9181363-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=c3774dd0d3b48ce898170876d05252adb2f92b33-8901029-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=263c28e8d8eceea70895c904f880e212b64928c2-8294270-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=78d4ed45fafe9f6cedb2934f0fcc938cd1d52a20-9050759-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=22efaaa843cb7bb474908ebac7158661425bca3e-9065974-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=8d20c0d271e9053a2ca62b412c4a8dc56cc6515f-5246350-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=446edff486f12589defc380337cedb73969b09d3-9589172-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=4048803598b8161035afd54a2222509fa398a7c9-8427413-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=edae7179de7094050a8f791949a7c6856aadc8e7-9699538-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=766f85e0244cca60524f0d952422acee862b383f-8564741-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=444d3714437929a22d186b8a702e1967cc7b6e70-9101109-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=c8bc077579879db179364499f6bef2bd398176aa-9182438-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=08013bbb6ae10bcd9d96d61e307922cbf78da35e-9148257-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=c390dedd62eb9bbf23b7159c3992134781ba5a32-4810024-images-thumbs&ref=rim&n=33&w=176&h=206",
+    "https://avatars.mds.yandex.net/i?id=6cb0327bc51493453930f62b3c641c5434060ef0-8438571-images-thumbs&ref=rim&n=33&w=164&h=206",
+    "https://avatars.mds.yandex.net/i?id=ac76d928c8d906448464f6951514df21475653e7-9152516-images-thumbs&n=13",
+    "https://avatars.mds.yandex.net/i?id=8eac33c1cabd16c1dd54fc848187149f41372189-9700546-images-thumbs&n=13",
+  ];
+
+  return avatarUrls;
+}

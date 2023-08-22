@@ -43,6 +43,31 @@
     </header>
 
     <div id="main">
+      <div class="user-profile">Вы вошли в аккаунт под именем: <b><span id="user-profile"></span></b></div> 
+    </div>
+
+    
+  
+    <div id="overview">
+      <h2></h2>
+      <h2>Посты</h2>
+
+      <div id="loader">
+        <span><h6>загрузка...</h6></span>
+        <span><h6>возможно вы не вошли в аккаунт</h6></span>
+        <br />
+        <img
+          src="https://media.tenor.com/xcowhQupDnkAAAAj/capybara-capybara-meme.gif"
+          alt="loader"
+        />
+      </div>
+
+      <div id="posts-container"></div>
+
+      <div id="messages"></div>
+    </div>
+
+    <div id="main">
       <div id="contacts" class="contacts">
         <center><h5>Вход</h5></center>
         <form id="form_input">
@@ -66,6 +91,15 @@
         </form>
       </div>
       
+      <div id="contacts" class="contacts">
+        <center><h5>Выход</h5></center>
+        <form id="form_input">
+
+          <div id="exit" class="btn"><span>Выйти</span></div>
+        </form>
+
+    </div>
+
       <div id="contacts" class="contacts">
         <center><h5>Регистрация</h5></center>
         <form id="form_input">
@@ -96,58 +130,40 @@
           <div id="reg" class="btn"><span>Зарегистрироваться</span></div>
         </form>
       </div>
+
+      <div id="contacts" class="contacts">
+        <center><h5>Предложка</h5></center>
+        <form id="form_input">
+          <!-- <label for="name">Имя <span>*</span></label
+          ><br /> -->
+          <input
+            type="text"
+            placeholder="Введите имя"
+            name="name"
+            id="name"
+          /><br />
+          <!-- <label for="text">Url картинки <span>*</span></label
+          ><br /> -->
+          <input
+            type="text"
+            placeholder="Введите url картинки"
+            name="url"
+            id="url"
+          /><br />
+          <!-- <label for="messege">Текст поста <span>*</span></label
+          ><br /> -->
+          <input
+            placeholder="Введите текст поста"
+            name="messege"
+            id="messege"
+          ></input
+          ><br />
+          <div id="mess_send" class="btn"><span>Отправить</span></div>
+        </form>
+      </div>
     </div>
 
     
-    <div id="overview">
-      <h2></h2>
-      <h2>Посты</h2>
-
-      <div id="loader">
-        <span><h6>загрузка...</h6></span>
-        <span><h6>возможно вы не вошли в аккаунт</h6></span>
-        <br />
-        <img
-          src="https://media.tenor.com/xcowhQupDnkAAAAj/capybara-capybara-meme.gif"
-          alt="loader"
-        />
-      </div>
-
-      <div id="posts-container"></div>
-
-      <div id="messages"></div>
-    </div>
-
-    <div id="contacts" class="contacts">
-      <center><h5>Предложка</h5></center>
-      <form id="form_input">
-        <!-- <label for="name">Имя <span>*</span></label
-        ><br /> -->
-        <input
-          type="text"
-          placeholder="Введите имя"
-          name="name"
-          id="name"
-        /><br />
-        <!-- <label for="text">Url картинки <span>*</span></label
-        ><br /> -->
-        <input
-          type="text"
-          placeholder="Введите url картинки"
-          name="url"
-          id="url"
-        /><br />
-        <!-- <label for="messege">Текст поста <span>*</span></label
-        ><br /> -->
-        <input
-          placeholder="Введите текст поста"
-          name="messege"
-          id="messege"
-        ></input
-        ><br />
-        <div id="mess_send" class="btn"><span>Отправить</span></div>
-      </form>
-    </div>
 
     
 
