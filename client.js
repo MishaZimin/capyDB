@@ -13,13 +13,13 @@ function slowScroll(id) {
   );
 }
 
-$(document).on("scroll", function () {
-  if ($(window).scrollTop() === 0) {
-    $("header").removeClass("fixed");
-  } else {
-    $("header").addClass("fixed");
-  }
-});
+// $(document).on("scroll", function () {
+//   if ($(window).scrollTop() === 0) {
+//     $("header").removeClass("fixed");
+//   } else {
+//     $("header").addClass("fixed");
+//   }
+// });
 
 function sendTelegramMessage(name, url, message) {
   var telegramBotToken = "6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo";
@@ -170,131 +170,6 @@ function clearLocalStorage() {
   localStorage.removeItem("posts");
   localStorage.removeItem("likedPosts");
 }
-
-$("#mess_send").click(function () {
-  var name = $("#name").val();
-  var url = $("#url").val();
-  var message = $("#messege").val();
-
-  //console.log(name, url, message);
-
-  url = url.trim();
-
-  if (name.length === 0) {
-    alert("напиши имя");
-    return;
-  }
-  if (url.length < 10) {
-    if (url.slice(0, 8) != "https://") {
-      alert("нужен url!");
-      return;
-    }
-  }
-  if (message.length === 0) {
-    alert("натыкай что-нибудь в тексте поста");
-    return;
-  }
-
-  sendTelegramMessage(name, url, message);
-  // console.log(name, "|", url.slice(0, 5), "|", message);
-
-  $("#name").val("");
-  $("#url").val("");
-  $("#messege").val("");
-});
-
-$("#registration").click(function () {
-  var username = $("#username").val();
-  var password = $("#password").val();
-  var mail = $("#mail").val();
-  var url = $("#url").val();
-
-  //console.log(username, password, mail);
-
-  password = password.trim();
-  url = url.trim();
-  mail = mail.trim();
-
-  if (username.length === 0) {
-    alert("напиши имя");
-    return;
-  }
-  if (password.length === 0) {
-    alert("нужен пароль");
-    return;
-  }
-
-  if (url.length < 10) {
-    if (url.slice(0, 8) != "https://") {
-      alert("нужен url!");
-      return;
-    }
-  }
-
-  // Создайте объект данных для отправки на сервер
-  var userData = {
-    username: username,
-    password: password,
-    mail: mail,
-    url: url,
-  };
-
-  ws.send(JSON.stringify({ action: "registration", userData }));
-
-  //sendTelegramMessage(username, password, mail);
-  // console.log(username, "|", password.slice(0, 5), "|", mail);
-
-  $("#username").val("");
-  $("#password").val("");
-  $("#mail").val("");
-  $("#url").val("");
-});
-
-$("#sign_in").click(function () {
-  var username = $("#username-sign-in").val();
-  var password = $("#password-sign-in").val();
-
-  password = password.trim();
-
-  if (username.length === 0) {
-    alert("напиши имя");
-    return;
-  }
-
-  // Создайте объект данных для отправки на сервер
-  var signIn = {
-    username: username,
-    password: password,
-  };
-
-  ws.send(JSON.stringify({ action: "sign_in", signIn }));
-
-  //sendTelegramMessage(username, password, mail);
-  // console.log(username, "|", password.slice(0, 5), "|", mail);
-
-  $("#username-sign-in").val("");
-  $("#password-sign-in").val("");
-
-  // location.reload();
-});
-
-$("#exit").click(function () {
-  // var loggedIn = localStorage.getItem("loggedIn");
-  // var username = localStorage.getItem("username");
-  // console.log(loggedIn, username);
-  localStorage.setItem("loggedIn", "false");
-  localStorage.setItem("username", "none");
-  localStorage.setItem(
-    "url",
-    "https://avatars.mds.yandex.net/i?id=cde779dc1051c473acd14df966bc038f9a42fccf-8076535-images-thumbs&n=13"
-  );
-  // console.log(loggedIn, username);
-
-  location.reload();
-  // console.log("успешный выход из аккаунта");
-});
-
-// let isWebSocketOpen = false;
 
 ws.onopen = function () {
   console.log("WebSocket соединение установлено");
@@ -449,17 +324,20 @@ function loadPostPlace() {
   var postHTML = `
   <div id="main">
     <div class="user-profile">
-      Аккаунт: <b><span id="user-profile"></span></b>
+      <div class="avatar-top">
+          <img src="${getLS("url")}" alt="Avatar">
+          
+      </div>
+      <b><span id="user-profile"></span></b>
     </div>
   </div>
 
   <div id="overview">
-    <h2></h2>
+
     <h2>Посты</h2>
 
     <div id="loader">
       <span><h6>загрузка...</h6></span>
-      <span><h6>возможно вы не вошли в аккаунт</h6></span>
       <br />
       <img
         src="https://media.tenor.com/xcowhQupDnkAAAAj/capybara-capybara-meme.gif"

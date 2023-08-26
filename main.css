@@ -28,7 +28,7 @@ html::-webkit-scrollbar-track {
 }
 
 body {
-  background-color: rgb(15, 15, 15);
+  background-color: rgb(25, 25, 25);
 }
 
 header {
@@ -40,6 +40,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  z-index: 100;
 }
 
 header #logo {
@@ -144,14 +146,16 @@ header #about > a:hover {
 
 #main {
   width: 60%;
-  float: left;
+  float: center;
   background-color: rgb(25, 25, 25);
   color: rgb(255, 255, 255);
+
+  /* max-height: 100px; */
 }
 
 #main {
   float: center;
-  padding: 10% 10% 5% 10%;
+  padding: 2%;
   width: 100%;
 }
 
@@ -354,6 +358,41 @@ header #about > a:hover {
   height: 50px;
 }
 
+.user-profile {
+  text-align: center center;
+  display: flex;
+}
+
+.user-profile b {
+  font-size: 1.25em;
+  padding-left: 2%;
+}
+
+.avatar-top {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 6.75/6;
+  height: 50px;
+
+  transition: transform 0.2s ease;
+  /* flex: 2 1 30%; */
+  max-width: 50px;
+  min-width: 50px;
+}
+
+.avatar-top img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  object-fit: cover;
+  border-radius: 100%;
+
+  width: 50px;
+  height: 50px;
+}
+
 .comment .avatar img {
   padding: 1%;
 }
@@ -512,8 +551,8 @@ header #about > a:hover {
   float: left;
   width: 50%;
   margin: 50% 25% 10% 25%;
-  padding-bottom: 50px;
-  padding-top: 50px;
+  padding-bottom: 5%;
+  padding-top: 5%;
   background: rgb(40, 40, 40);
   border-radius: 15px;
 
@@ -527,7 +566,7 @@ header #about > a:hover {
 #send-post-form h5,
 #reg-form h5 {
   font-size: 2em;
-  padding-bottom: 5%;
+  padding-bottom: 2%;
   color: white;
 }
 
@@ -604,7 +643,7 @@ header #about > a:hover {
 }
 
 .btn {
-  margin-top: 5%;
+  margin-top: 2%;
   margin-left: 25%;
   width: 50%;
 
@@ -708,7 +747,15 @@ header #about > a:hover {
   }
 
   #main {
-    padding: 5% 10% 5% 10%;
+    padding: 2%;
+  }
+
+  #main b {
+    padding-left: 1%;
+  }
+
+  .user-profile {
+    padding: 1% !important;
   }
 
   .post-time {
@@ -746,6 +793,10 @@ header #about > a:hover {
     margin-left: 76%;
   }
 
+  .user-profile {
+    padding: 1.5% !important;
+  }
+
   .avatar {
     aspect-ratio: 6.748/6;
   }
@@ -773,6 +824,10 @@ header #about > a:hover {
     font-size: 0.9em;
     width: 20%;
     margin-left: 76%;
+  }
+
+  .user-profile {
+    padding: 3% !important;
   }
 
   .avatar {
@@ -823,7 +878,7 @@ header #about > a:hover {
   }
 
   #main {
-    padding: 15% 5% 5% 5%;
+    padding: 5% 5% 5% 5%;
   }
 
   #main .intro h2 {
@@ -858,6 +913,10 @@ header #about > a:hover {
 
   .avatar {
     aspect-ratio: 7.205/6;
+  }
+
+  .user-profile {
+    padding: 4% !important;
   }
 
   .comment-list {
@@ -897,6 +956,10 @@ header #about > a:hover {
   #reg-form label {
     font-size: 0.8em;
   }
+
+  /* #main-1 {
+    padding-top: 10%;
+  } */
 
   .btn {
     margin-left: 30%;
