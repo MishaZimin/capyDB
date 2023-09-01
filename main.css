@@ -288,6 +288,22 @@ header #about > a:hover {
   /* box-shadow: inset 2px 5px 15px rgba(0, 0, 0, 0.3); */
 }
 
+.like-section-comment {
+  margin-left: 3%;
+  width: 14%;
+  min-width: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  display: flex;
+  align-items: center;
+  background-color: rgb(32, 32, 32);
+  border: 1px solid rgb(32, 32, 32);
+  border-radius: 20px;
+  font-size: 0.7em;
+
+  /* box-shadow: inset 2px 5px 15px rgba(0, 0, 0, 0.3); */
+}
+
 .like-counter {
   padding-left: 17%;
   padding-right: 17%;
