@@ -45,17 +45,35 @@ function sendTelegramMessage(name, url, message) {
 }
 
 function handleLike(button, postId) {
-  if (true) {
-    var likeCounter = button.nextElementSibling;
-    var currentLikes = parseInt(likeCounter.textContent);
-    likeCounter.textContent = currentLikes + 1;
+  var likeCounter = button.nextElementSibling;
+  var currentLikes = parseInt(likeCounter.textContent);
 
-    ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
+  likeCounter.textContent = currentLikes + 1;
 
-    // } else {
-    //   ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
-  }
+  ws.send(JSON.stringify({ action: "like_post", postId: postId, type: "add" }));
+
+  // if (true) {
+
+  //   // } else {
+  //   //   ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
+  // }
   // location.reload();
+}
+
+function handleLikeComment(button, postId, commentID) {
+  var likeCounter = button.nextElementSibling;
+  var currentLikes = parseInt(likeCounter.textContent);
+
+  likeCounter.textContent = currentLikes + 1;
+
+  ws.send(
+    JSON.stringify({
+      action: "like_comment",
+      postId: postId,
+      commentID: commentID,
+      type: "add",
+    })
+  );
 }
 
 function scrollToBottom(postId) {
@@ -66,13 +84,6 @@ function scrollToBottom(postId) {
 function toggleComments(postId) {
   var commentsDiv = document.getElementById(`comments-${postId}`);
   var commentAddDiv = document.getElementById(`add-comment-${postId}`);
-  // var commentContainer = document.getElementById(`comment-container-${postId}`);
-
-  // if (!commentContainer) {
-  //   commentContainer = document.createElement("div");
-  //   commentContainer.setAttribute("id", `comment-container-${postId}`);
-  //   commentsDiv.appendChild(commentContainer);
-  // }
 
   if (
     commentsDiv.style.display === "none" &&
@@ -131,17 +142,17 @@ function addComment(postId) {
   var avatarUrls = getAvatarUrl();
 
   var randomIndex = Math.floor(Math.random() * avatarUrls.length);
-  var randomAvatarUrl = avatarUrls[randomIndex];
+  //var randomAvatarUrl = avatarUrls[randomIndex];
 
   var commentId = Date.now().toString();
-  var commentName = "@capybara";
+  //var commentName = "@capybara";
 
   var comment = {
     id: commentId,
-    name: getLS("username"),
+    name: getLocalSorage("username"),
     likes: 0,
     text: commentText,
-    avatar: getLS("url"),
+    avatar: getLocalSorage("url"),
     timestamp: Math.floor(Date.now() / 1000),
   };
 
@@ -193,7 +204,8 @@ ws.onopen = function () {
 
   if (checkLocalStorage()) {
     loadPostPlace();
-    document.getElementById("user-profile").textContent = getLS("username");
+    document.getElementById("user-profile").textContent =
+      getLocalSorage("username");
     loadExitForm();
     loadSendPostForm();
     loadRegPostFormNone();
@@ -258,16 +270,12 @@ function loadSignInForm() {
   <div id="sign-in-form" class="sign-in-form">
     <center><h5>Вход</h5></center>
     <form id="form_input">
-      <!-- <label for="name">Имя <span>*</span></label
-      ><br /> -->
       <input
         type="text"
         placeholder="Введите имя пользователя"
         name="username-sign-in"
         id="username-sign-in"
       /><br />
-      <!-- <label for="text">Url картинки <span>*</span></label
-      ><br /> -->
       <input
         type="text"
         placeholder="Введите пароль"
@@ -325,7 +333,7 @@ function loadPostPlace() {
   <div id="main">
     <div class="user-profile">
       <div class="avatar-top">
-          <img src="${getLS("url")}" alt="Avatar">
+          <img src="${getLocalSorage("url")}" alt="Avatar">
           
       </div>
       <b><span id="user-profile"></span></b>
@@ -428,7 +436,7 @@ function loadButtonSendPost() {
     return;
   }
 
-  sendTelegramMessage(getLS("username"), url, message);
+  sendTelegramMessage(getLocalSorage("username"), url, message);
   // console.log(name, "|", url.slice(0, 5), "|", message);
 
   $("#urlPost").val("");
@@ -596,22 +604,34 @@ function loadPostsFromDB(posts) {
     var commentAddDiv = document.getElementById(`add-comment-${post.id}`);
     var commentContainer = commentsDiv.querySelector(".comment-container");
 
+    post.comments.sort(function (a, b) {
+      return a.likes - b.likes;
+    });
+
     post.comments.forEach(function (comment) {
       var commentHTML = `
-                  <div class="comment" id="comment-${comment.id}">
-                      <div class="avatar">
-                          <img src="${comment.avatar}" alt="Avatar">
-                      </div>
-                      <span class="comment-text">
-                          <p class="comment-name">${comment.name}</p>
-                          ${comment.text}
-                      </span>
-                      <span class="comment-right">
-                          <p class="comment-time">
-                              ${formatTime(comment.timestamp)}
-                          </p>
-                      </span>
+                <div class="comment" id="comment-${comment.id}">
+                  <div class="avatar">
+                      <img src="${comment.avatar}" alt="Avatar">
                   </div>
+                  <span class="comment-text">
+                      <p class="comment-name">${comment.name}</p>
+                      ${comment.text}
+                  </span>
+                  <span class="comment-right">
+                    <div class="like-section-comment">
+                      <button class="like-button${
+                        comment.likes > 0 ? " liked" : ""
+                      }" onclick="handleLikeComment(this, ${post.id}, ${
+        comment.id
+      })">&#x2764;</button>
+                    <span class="like-counter">${comment.likes}</span>
+                    </div>
+                    <p class="comment-time">
+                        ${formatTime(comment.timestamp)}
+                    </p>
+                  </span>
+                </div>
               `;
 
       commentContainer.insertAdjacentHTML("afterbegin", commentHTML);
@@ -650,7 +670,7 @@ function checkLocalStorage() {
   return loggedIn === "true" && username && url;
 }
 
-function getLS(object) {
+function getLocalSorage(object) {
   return localStorage.getItem(object);
 }
 
