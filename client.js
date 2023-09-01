@@ -620,12 +620,12 @@ function loadPostsFromDB(posts) {
                   </span>
                   <span class="comment-right">
                     <div class="like-section-comment">
-                      <button class="like-button${
+                      <button class="like-button-comment${
                         comment.likes > 0 ? " liked" : ""
                       }" onclick="handleLikeComment(this, ${post.id}, ${
         comment.id
       })">&#x2764;</button>
-                    <span class="like-counter">${comment.likes}</span>
+                    <span class="like-counter-comment">${comment.likes}</span>
                     </div>
                     <p class="comment-time">
                         ${formatTime(comment.timestamp)}
