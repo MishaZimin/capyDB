@@ -749,7 +749,8 @@ header #about > a:hover {
   margin-top: 0%;
   margin-left: auto;
   width: 100%;
-  max-width: 200px;
+  max-width: 150px;
+  min-width: 100px;
   min-height: 50px;
   display: inline-block;
   padding: 14px 0px;
