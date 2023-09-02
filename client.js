@@ -206,7 +206,7 @@ ws.onopen = function () {
     loadPostPlace();
     document.getElementById("user-profile").textContent =
       getLocalSorage("username");
-    loadExitForm();
+    //loadExitForm();
     loadSendPostForm();
     loadRegPostFormNone();
     loadSignInNone();
@@ -266,13 +266,16 @@ function loadSignInForm() {
   var messagesDiv = document.getElementById("sign-in-form-place");
   messagesDiv.innerHTML = "";
 
+  var loader = document.getElementById("loader-start");
+  loader.style.display = "block"; // Показать лоадер
+
   var postHTML = `
   <div id="sign-in-form" class="sign-in-form">
     <center><h5>Вход</h5></center>
     <form id="form_input">
       <input
         type="text"
-        placeholder="Введите имя пользователя"
+        placeholder="Введите имя"
         name="username-sign-in"
         id="username-sign-in"
       /><br />
@@ -286,7 +289,7 @@ function loadSignInForm() {
     </form>
   </div>
   `;
-
+  loader.style.display = "none";
   messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
 }
 
@@ -310,6 +313,11 @@ function loadButtonSignInForm() {
     return;
   }
 
+  if (password.length === 0) {
+    alert("напиши пароль");
+    return;
+  }
+
   // Создайте объект данных для отправки на сервер
   var signIn = {
     username: username,
@@ -329,6 +337,9 @@ function loadPostPlace() {
   var messagesDiv = document.getElementById("post-form-place");
   messagesDiv.innerHTML = "";
 
+  var loader = document.getElementById("loader-start");
+  loader.style.display = "block"; // Показать лоадер
+
   var postHTML = `
   <div id="main">
     <div class="user-profile">
@@ -336,7 +347,11 @@ function loadPostPlace() {
           <img src="${getLocalSorage("url")}" alt="Avatar">
           
       </div>
+      
       <b><span id="user-profile"></span></b>
+      <form id="form_input_exit">
+        <div id="exit" class="btn_exit" onclick="loadButtonExitForm()"><span>Выйти</span></div>
+      </form>
     </div>
   </div>
 
@@ -359,25 +374,26 @@ function loadPostPlace() {
   </div>
   `;
 
+  loader.style.display = "none";
   messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
 }
 
-function loadExitForm() {
-  var messagesDiv = document.getElementById("exit-form-place");
-  messagesDiv.innerHTML = "";
+// function loadExitForm() {
+//   var messagesDiv = document.getElementById("exit-form-place");
+//   messagesDiv.innerHTML = "";
 
-  var postHTML = `
-  <div id="exit-form" class="exit-form">
-    <center><h5>Выход</h5></center>
-    <form id="form_input">
+//   var postHTML = `
+//   <div id="exit-form" class="exit-form">
+//     <center><h5>Выход</h5></center>
+//     <form id="form_input">
 
-      <div id="exit" class="btn" onclick="loadButtonExitForm()"><span>Выйти</span></div>
-    </form>
-  </div>
-  `;
+//       <div id="exit" class="btn" onclick="loadButtonExitForm()"><span>Выйти</span></div>
+//     </form>
+//   </div>
+//   `;
 
-  messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
-}
+//   messagesDiv.insertAdjacentHTML("afterbegin", postHTML);
+// }
 
 function loadButtonExitForm() {
   localStorage.setItem("loggedIn", "false");
@@ -425,14 +441,15 @@ function loadButtonSendPost() {
   //console.log(name, url, message);
 
   url = url.trim();
+
   if (url.length < 10) {
     if (url.slice(0, 8) != "https://") {
-      alert("нужен url! qqqq");
+      alert("нужен url!");
       return;
     }
   }
   if (message.length === 0) {
-    alert("натыкай что-нибудь в тексте поста");
+    alert("нужен текст поста!");
     return;
   }
 
@@ -451,24 +468,18 @@ function loadRegPostForm() {
   <div id="reg-form" class="reg-form">
     <center><h5>Регистрация</h5></center>
     <form id="form_input">
-      <!-- <label for="name">Имя <span>*</span></label
-      ><br /> -->
       <input
         type="text"
-        placeholder="Введите имя пользователя"
+        placeholder="Введите имя (добавь цифр)"
         name="username"
         id="username"
       /><br />
-      <!-- <label for="text">Url картинки <span>*</span></label
-      ><br /> -->
       <input
         type="text"
         placeholder="Введите пароль"
         name="password"
         id="password"
       /><br />
-      <!-- <label for="messege">Текст поста <span>*</span></label
-      ><br /> -->
       <input
         placeholder="Введите почту"
         name="mail"
