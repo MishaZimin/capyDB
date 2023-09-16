@@ -145,12 +145,17 @@ header #about > a:hover {
 }
 
 #main {
-  width: 60%;
+  width: 100%;
   float: center;
   background-color: rgb(25, 25, 25);
   color: rgb(255, 255, 255);
 
   /* max-height: 100px; */
+}
+
+#main .intro h2 {
+  color: rgb(255, 255, 255);
+  font-size: 2.5em;
 }
 
 #main {
@@ -166,25 +171,23 @@ header #about > a:hover {
 }
 
 #main .user-profile {
-  background-color: rgb(35, 35, 35);
-  border-radius: 10px;
+  display: flex;
+  /* background-color: rgb(35, 35, 35);
+  border-radius: 10px; */
 
-  padding: 4%;
-}
-
-#main .intro h2 {
-  color: rgb(255, 255, 255);
-  font-size: 2.5em;
+  /* padding: 4%; */
 }
 
 #main .user-profile span {
+  padding-right: 50%;
   color: rgb(150, 150, 150);
   font-size: 1em;
 }
 
-.user-profile {
-  background-color: #999;
-  color: white;
+#main .user-profile b {
+  flex-grow: 2;
+  /* font-size: 1.25em; */
+  padding-left: 2%;
 }
 
 #overview {
@@ -323,23 +326,28 @@ header #about > a:hover {
   background-color: rgb(32, 32, 32);
   border: 1px solid rgb(32, 32, 32);
   border-radius: 20px;
-  font-size: 0.7em;
+  font-size: 0.8em;
   text-align: right;
   margin-bottom: 10%;
+
   /* box-shadow: inset 2px 5px 15px rgba(0, 0, 0, 0.3); */
 }
 
 .like-button-comment {
+  flex-grow: 1;
   background: none;
   border: none;
   color: rgb(255, 255, 255);
   font-size: 15px;
   cursor: pointer;
-  margin-left: 40%;
+  /* margin-left: 40%; */
   padding-bottom: 1%;
   transition: transform 0.15s ease;
 }
 
+.like-counter-comment {
+  padding-right: 10%;
+}
 .like-button-comment:disabled {
   color: red;
 }
@@ -392,16 +400,6 @@ header #about > a:hover {
 
   width: 50px;
   height: 50px;
-}
-
-.user-profile {
-  text-align: center center;
-  display: flex;
-}
-
-.user-profile b {
-  font-size: 1.25em;
-  padding-left: 2%;
 }
 
 .avatar-top {
@@ -606,23 +604,6 @@ header #about > a:hover {
   color: white;
 }
 
-#form_input_exit {
-  overflow: hidden;
-
-  width: 100%;
-  height: 20px;
-  margin-left: 40%;
-  font-size: 1em;
-  min-height: 50px;
-
-  text-align: right;
-  position: center;
-
-  /* display: block; */
-  /* margin-left: auto;
-  margin-right: auto; */
-}
-
 #form_input {
   padding-top: 15px;
   width: 100%;
@@ -749,11 +730,11 @@ header #about > a:hover {
   margin-top: 0%;
   margin-left: auto;
   width: 100%;
-  max-width: 150px;
-  min-width: 100px;
+  max-width: 200px;
+
   min-height: 50px;
   display: inline-block;
-  padding: 14px 0px;
+  padding: 14px 30px;
   font-size: 17px;
   /* font-weight: bold; */
   color: rgb(200, 200, 200);
@@ -875,10 +856,6 @@ header #about > a:hover {
     padding-left: 1%;
   }
 
-  .user-profile {
-    padding: 1% !important;
-  }
-
   .post-time {
     font-size: 1.2em;
     width: 20%;
@@ -914,10 +891,6 @@ header #about > a:hover {
     margin-left: 76%;
   }
 
-  .user-profile {
-    padding: 1.5% !important;
-  }
-
   .avatar {
     aspect-ratio: 6.748/6;
   }
@@ -945,10 +918,6 @@ header #about > a:hover {
     font-size: 0.9em;
     width: 20%;
     margin-left: 76%;
-  }
-
-  .user-profile {
-    padding: 3% !important;
   }
 
   .avatar {
@@ -1034,10 +1003,6 @@ header #about > a:hover {
 
   .avatar {
     aspect-ratio: 7.205/6;
-  }
-
-  .user-profile {
-    padding: 4% !important;
   }
 
   .comment-list {
