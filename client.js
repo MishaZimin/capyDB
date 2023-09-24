@@ -473,7 +473,7 @@ function loadRegPostForm() {
         id="urlAvatar"
       ></input
       ><br />
-      <div id="registration" class="btn" onclick="loadButtonRegSendPost()"><span>Зарегистрироваться</span></div>
+      <div id="registration" class="btn" onclick="loadButtonRegSendPost()"><span>Отправить</span></div>
     </form>
   </div>
   `;
