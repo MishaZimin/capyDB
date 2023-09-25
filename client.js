@@ -275,13 +275,13 @@ function loadSignInForm() {
     <form id="form_input">
       <input
         type="text"
-        placeholder="Введите имя"
+        placeholder="Введите имя (тестовое 1)"
         name="username-sign-in"
         id="username-sign-in"
       /><br />
       <input
         type="text"
-        placeholder="Введите пароль"
+        placeholder="Введите пароль (тестовое 1)"
         name="password-sign-in"
         id="password-sign-in"
       /><br />
