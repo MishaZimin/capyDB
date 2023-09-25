@@ -13,37 +13,6 @@ function slowScroll(id) {
   );
 }
 
-// $(document).on("scroll", function () {
-//   if ($(window).scrollTop() === 0) {
-//     $("header").removeClass("fixed");
-//   } else {
-//     $("header").addClass("fixed");
-//   }
-// });
-
-function sendTelegramMessage(name, url, message) {
-  var telegramBotToken = "6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo";
-  var telegramChatId = "997616670";
-
-  var telegramMessage =
-    "\n" + name + " " + "\n" + url + " " + "\n" + message + "\n";
-
-  $.ajax({
-    url: "https://api.telegram.org/bot" + telegramBotToken + "/sendMessage",
-    method: "POST",
-    data: {
-      chat_id: telegramChatId,
-      text: telegramMessage,
-    },
-    success: function (response) {
-      console.log("Сообщение отправлено в Telegram");
-    },
-    error: function (error) {
-      console.log("Ошибка при отправке сообщения в Telegram");
-    },
-  });
-}
-
 function handleLike(button, postId) {
   var likeCounter = button.nextElementSibling;
   var currentLikes = parseInt(likeCounter.textContent);
@@ -51,13 +20,6 @@ function handleLike(button, postId) {
   likeCounter.textContent = currentLikes + 1;
 
   ws.send(JSON.stringify({ action: "like_post", postId: postId, type: "add" }));
-
-  // if (true) {
-
-  //   // } else {
-  //   //   ws.send(JSON.stringify({ action: "like", postId: postId, type: "add" }));
-  // }
-  // location.reload();
 }
 
 function handleLikeComment(button, postId, commentID) {
@@ -184,23 +146,10 @@ function clearLocalStorage() {
 
 ws.onopen = function () {
   console.log("WebSocket соединение установлено");
-  // // isWebSocketOpen = true;
-
-  // // Проверьте, вошел ли пользователь, используя информацию из localStorage
 
   console.log(localStorage.getItem("loggedIn"));
   console.log(localStorage.getItem("username"));
   console.log(localStorage.getItem("url"));
-
-  // if (loggedIn === "true" && username) {
-  //   // Если пользователь успешно вошел, установите имя пользователя где-то на странице
-  //   // Например, в каком-то элементе с id "user-profile"
-
-  //   document.getElementById("user-profile").textContent = username;
-  //   ws.send(JSON.stringify({ action: "get_posts" }));
-
-  //   //location.reload();
-  // }
 
   if (checkLocalStorage()) {
     loadPostPlace();
@@ -220,11 +169,6 @@ ws.onopen = function () {
 };
 
 ws.onmessage = function (event) {
-  // if (!isWebSocketOpen) {
-  //   // Если соединение не установлено, игнорируем сообщения
-  //   return;
-  // }
-
   if (event.data[0] === "[") {
     const postsdb = JSON.parse(event.data);
 
@@ -331,6 +275,29 @@ function loadButtonSignInForm() {
 
   $("#username-sign-in").val("");
   $("#password-sign-in").val("");
+}
+
+function sendTelegramMessage(name, url, message) {
+  var telegramBotToken = "6392841364:AAE8PozN2Y6x0zbyjO8ei6KIRm-hUDcGyUo";
+  var telegramChatId = "997616670";
+
+  var telegramMessage =
+    "\n" + name + " " + "\n" + url + " " + "\n" + message + "\n";
+
+  $.ajax({
+    url: "https://api.telegram.org/bot" + telegramBotToken + "/sendMessage",
+    method: "POST",
+    data: {
+      chat_id: telegramChatId,
+      text: telegramMessage,
+    },
+    success: function (response) {
+      console.log("Сообщение отправлено в Telegram");
+    },
+    error: function (error) {
+      console.log("Ошибка при отправке сообщения в Telegram");
+    },
+  });
 }
 
 function loadPostPlace() {
